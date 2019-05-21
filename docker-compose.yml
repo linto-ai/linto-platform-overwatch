@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  overwatch:
+    build: .
+    container_name: linto-overwatch
+    image: linto/overwatch
+    env_file: .env
+    networks:
+      - linto_net
+
+networks:
+  linto_net:
+    external: true
