@@ -1,7 +1,7 @@
 MQTT_KEEP_ALIVE=2
 
-MQTT_USER=mqtt_user
-MQTT_PSW=mqtt_psw
+MQTT_USER=
+MQTT_PSW=
 
 MQTT_HOST=localhost
 MQTT_PORT=1883
@@ -10,5 +10,5 @@ MONGO_HOST=localhost
 MONGO_PORT=27017
 MONGO_DB_NAME=linto
 
-MONGO_USER=mongo_user
-MONGO_PSW=mongo_pws
+MONGO_USER=
+MONGO_PSW=

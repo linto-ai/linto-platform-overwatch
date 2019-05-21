@@ -20,7 +20,6 @@ Here are the information about mqtt
 * `MQTT_HOST` : MQTT address
 * `MQTT_PORT` : MQTT running port (default 1883)
 
-
 Here are the information about Mongo
 * `MONGO_HOST` : mongodb running host
 * `MONGO_PORT` : mongodb running port
