@@ -16,15 +16,17 @@
   },
   "keywords": [
     "linto",
-    "overwatch"
+    "overwatch",
+    "mqtt",
+    "mongodb"
   ],
   "author": "yhoupert@linagora.com",
   "license": "ISC",
   "dependencies": {
     "debug": "^4.1.1",
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.0.0",
     "fs": "0.0.1-security",
-    "mongodb": "^3.1.13",
+    "mongodb": "^3.2.5",
     "mqtt": "^2.18.8"
   }
 }
