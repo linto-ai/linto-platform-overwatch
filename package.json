@@ -12,8 +12,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@ci.linagora.com:7999/linagora/lgs/labs/Linto-Device/Linto-Backend/linto-overwatch.git"
+    "url": "https://github.com/linto-ai/linto-skills-optional.git"
   },
+  "bugs": {
+    "url": "https://github.com/linto-ai/linto-skills-optional/issues"
+  },
+  "homepage": "https://linto.ai/",
   "keywords": [
     "linto",
     "overwatch",
@@ -21,7 +25,7 @@
     "mongodb"
   ],
   "author": "yhoupert@linagora.com",
-  "license": "ISC",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "debug": "^4.1.1",
     "dotenv": "^8.0.0",
