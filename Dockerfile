@@ -1,8 +1,8 @@
 FROM node
 
-WORKDIR /usr/src/app/linto-overwatch
+WORKDIR /usr/src/app/linto-platform-overwatch
 
-COPY . /usr/src/app/linto-overwatch
+COPY . /usr/src/app/linto-platform-overwatch
 
 RUN npm install
 
