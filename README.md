@@ -32,7 +32,7 @@ If MongoDb or MQTT user are empty they will not be used
 * `MONGO_PSW` : Password for mongoDb authentication
 
 Mongo collection to update
-* `MONGO_COLLECTION_LINTO` : LinTO collection name for linto-platform-admin  mongoDb collection
+* `MONGO_COLLECTION_LINTOS` : LinTO collection name for linto-platform-admin  mongoDb collection
 * `MONGO_COLLECTION_LOG` : LinTO collection name for log
 
 ## Run project

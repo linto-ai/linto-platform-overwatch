@@ -49,7 +49,7 @@ function configureDefaults() {
 		process.env.MONGO_DB_NAME = ifHas(process.env.MONGO_DB_NAME, envdefault.MONGO_DB_NAME)
 
 		//Mongo collection
-		process.env.MONGO_COLLECTION_LINTO = ifHas(process.env.MONGO_COLLECTION_LINTO, envdefault.MONGO_COLLECTION_LINTO)
+		process.env.MONGO_COLLECTION_LINTOS = ifHas(process.env.MONGO_COLLECTION_LINTOS, envdefault.MONGO_COLLECTION_LINTOS)
 		process.env.MONGO_COLLECTION_LOG = ifHas(process.env.MONGO_COLLECTION_LOG, envdefault.MONGO_COLLECTION_LOG)
 
 		process.env.MONGO_USER = ifHas(process.env.MONGO_USER, envdefault.MONGO_USER)
