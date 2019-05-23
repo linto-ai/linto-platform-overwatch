@@ -7,10 +7,7 @@ services:
     image: linto/overwatch
     env_file: .env
     networks:
-      - linto_net
       - internal
 
 networks:
   internal:
-  linto_net:
-    external: true

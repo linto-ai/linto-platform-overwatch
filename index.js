@@ -26,7 +26,7 @@ class Ctl {
     }
     async init() {
         try {
-            const LintoOverwatch = await require('./lib/overwatch/overwatch')// will sequence actions on LinTO's MQTT payloads
+            const LintoOverwatch = await require('./lib/overwatch/overwatch') // will sequence actions on LinTO's MQTT payloads
 			this.lintoWatcher = await new LintoOverwatch()
         } catch (error) {
             console.error(error)
