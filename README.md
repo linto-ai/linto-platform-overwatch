@@ -1,54 +1,60 @@
 # LinTO-Platform-Overwatch
 
-LinTO Platform Overwatch will check any status change from a LinTO on the MQTT-Broker then update their status change on mongo database associated.
+LinTO Platform Overwatch is a MQTT global subscriber for a fleet of LinTO clients. It registers every events in the persistent storage include in [LinTO-Platform-Admin](https://github.com/linto-ai/linto-platform-admin). The persistent storage on LinTO Admin is based on Mongo.
 
-# Getting Started
-These instructions will get you a copy of the project up and running on your local machine for development.
+The persistent LinTO events are :
+* `connexion` : **connected** and **disconnected**
+* `date` : date of the last modification
 
-## Installing
-A step by step series of examples that tell you how to get a development environment running
+## Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development. Thise module require at least for working :
+* An mqtt server
+* [LinTO-Platform-Admin](https://github.com/linto-ai/linto-platform-admin), which include the data persistent storage
+
+Nodejs shall be installed `sudo apt-get install nodejs`, also npm shall be installed `sudo apt-get install npm`
+
+### Installing
+A step by step series of command that will give you a development environment running
 ```
 git clone https://github.com/linto-ai/linto-platform-overwatch.git
 cd linto-platform-overwatch
 npm install
 ```
 
-## Configuration environment
-First copy the default environment file `cp .envdefault .env`, then update the `.env` file to manage your personal configuration
+### Configuration environment
+The file `.envdefault` contain the recommended default configuration that we suggest.
+If you want to use the default environement then copy the file `cp .envdefault .env`. You can update the `.env` file to manage your personal configuration if needed
 
-Here are the information about mqtt
-* `MQTT_HOST` : MQTT address
-* `MQTT_PORT` : MQTT running port (default 1883)
+Information about mqtt server
+* `MQTT_HOST` : MQTT host address
+* `MQTT_PORT` : MQTT running port (mqtt default : 1883)
 
-Here are the information about Mongo
-* `MONGO_HOST` : mongodb running host
-* `MONGO_PORT` : mongodb running port
+Information about Mongo
+* `MONGO_HOST` : mongodb host address
+* `MONGO_PORT` : mongodb running port (mongo default port : 27017)
 * `MONGO_DB_NAME` : mongodb database name (default linto)
+* `MONGO_COLLECTION_LINTOS` : LinTO collection name for linto-platform-admin mongoDb collection (default lintos)
+* `MONGO_COLLECTION_LOG` : LinTO collection name for log (default statusLog)
 
-If MongoDb or MQTT user are empty they will not be used
+Depending of MongoDb and MQTT server settings, this parameter can be optional
 * `MQTT_USER` : MQTT authentication user
 * `MQTT_PSW` : MQTT authentication password
-* `MONGO_USER` : Login for mongoDb authentication
-* `MONGO_PSW` : Password for mongoDb authentication
+* `MONGO_USER` : MongoDB authentication user
+* `MONGO_PSW` : MongoDB authentication password
 
-Mongo collection to update
-* `MONGO_COLLECTION_LINTOS` : LinTO collection name for linto-platform-admin  mongoDb collection
-* `MONGO_COLLECTION_LOG` : LinTO collection name for log
-
-## Run project
+### Run project
 Normal : `npm run start`
 Debug : `DEBUG=* npm run start`
 
-# Docker
-## Install Docker
+## Docker
+### Install Docker
 
 You will need to have Docker installed on your machine. If they are already installed, you can skip this part.
 Otherwise, you can install them referring to [https://docs.docker.com/engine/installation/](https://docs.docker.com/engine/installation/ "Install Docker")
 
 ## Build
-Next step is to build the docker with the following command `docker build -t linto-overwatch .`
-Then you just need to start it with `docker run -d -it linto-overwatch`
+Next step is to build the docker image with the following command `docker build -t linto-overwatch .`
+Then you just need to run bls image`docker run -d -it linto-overwatch`
 
-## Stack
+### Stack
 You will find the full process to deploy the LinTO platform here : [LinTO-Platform-Stack](https://github.com/linto-ai/linto-platform-stack)
-

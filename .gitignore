@@ -42,3 +42,4 @@ tmp/
 # Other
 package-lock.json
 .history/
+temp/

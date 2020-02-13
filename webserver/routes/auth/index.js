@@ -1,5 +1,6 @@
+
 /*
- * Copyright (c) 2017 Linagora.
+ * Copyright (c) 2018 Linagora.
  *
  * This file is part of Business-Logic-Server
  *
@@ -17,24 +18,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const debug = require('debug')('linto-overwatch:ctl')
-require('./config')
+'use strict'
+const debug = require('debug')('linto-overwatch:webserver:auth:basic')
 
-class Ctl {
-    constructor() {
-        this.init()
-    }
-    async init() {
-        try {
-            const LintoOverwatch = await require('./lib/overwatch/overwatch') // will sequence actions on LinTO's MQTT payloads
-            this.lintoWatcher = await new LintoOverwatch()
-
-            this.webServer = await require('./webserver')
-        } catch (error) {
-            console.error(error)
-            process.exit(1)
+module.exports = (webServer, auth) => {
+  return [
+    {
+      name: 'login',
+      path: '/',
+      method: 'post',
+      controller: [
+        auth.authenticate,
+        (req, res, next) => {
+          res.status(202).json(req.user)
         }
+      ],
+    },
+    {
+      name: 'isAuth',
+      path: '/',
+      method: 'get',
+      controller: [
+        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (req, res, next) => {
+          res.status(202).json(req.user)
+        }
+      ]
     }
+  ]
 }
-
-new Ctl()

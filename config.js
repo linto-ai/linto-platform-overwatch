@@ -55,6 +55,20 @@ function configureDefaults() {
 		process.env.MONGO_USER = ifHas(process.env.MONGO_USER, envdefault.MONGO_USER)
 		process.env.MONGO_PSW = ifHas(process.env.MONGO_PSW, envdefault.MONGO_PSW)
 
+		process.env.PORT = ifHas(process.env.PORT, envdefault.PORT)
+
+
+		process.env.AUTH_TYPE = ifHas(process.env.AUTH_TYPE, envdefault.AUTH_TYPE)
+
+		process.env.AUTH_TYPE.split(',').map(auth => {
+			//TODO: Check if particular auth settings
+			if (auth === 'ldap') {
+				process.env.LDAP_SERVER_URL = ifHas(process.env.LDAP_SERVER_URL, envdefault.LDAP_SERVER_URL)
+				process.env.LDAP_SERVER_SEARCH_BASE = ifHas(process.env.LDAP_SERVER_SEARCH_BASE, envdefault.LDAP_SERVER_SEARCH_BASE)
+				process.env.LDAP_SERVER_SEARCH_FILTER = ifHas(process.env.LDAP_SERVER_SEARCH_FILTER, envdefault.LDAP_SERVER_SEARCH_FILTER)
+			}
+		})
+
 	} catch (e) {
 		console.error(e)
 		process.exit(1)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Linagora.
+ * Copyright (c) 2018 Linagora.
  *
  * This file is part of Business-Logic-Server
  *
@@ -16,25 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+const debug = require('debug')('linto-overwatch:webserver:routes:routes')
 
-const debug = require('debug')('linto-overwatch:ctl')
-require('./config')
+module.exports = (webServer, authMiddleware) => {
+  let routes = {
+    '/overwatch': require('./overwatch')(webServer)
+  }
 
-class Ctl {
-    constructor() {
-        this.init()
-    }
-    async init() {
-        try {
-            const LintoOverwatch = await require('./lib/overwatch/overwatch') // will sequence actions on LinTO's MQTT payloads
-            this.lintoWatcher = await new LintoOverwatch()
+  authMiddleware.map(auth => {
+    routes[`/${auth.authType}/auth`] = require('./auth')(webServer, auth)
+  })
 
-            this.webServer = await require('./webserver')
-        } catch (error) {
-            console.error(error)
-            process.exit(1)
-        }
-    }
+  return routes
 }
-
-new Ctl()

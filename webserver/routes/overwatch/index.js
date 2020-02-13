@@ -1,5 +1,6 @@
+
 /*
- * Copyright (c) 2017 Linagora.
+ * Copyright (c) 2018 Linagora.
  *
  * This file is part of Business-Logic-Server
  *
@@ -17,24 +18,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const debug = require('debug')('linto-overwatch:ctl')
-require('./config')
+'use strict'
+const debug = require('debug')('linto-overwatch:webserver:overwatch')
 
-class Ctl {
-    constructor() {
-        this.init()
+module.exports = (webServer) => {
+  return [
+    {
+      path: '/health',
+      method: 'get',
+      controller: async (req, res, next) => {
+        res.sendStatus(200)
+      }
     }
-    async init() {
-        try {
-            const LintoOverwatch = await require('./lib/overwatch/overwatch') // will sequence actions on LinTO's MQTT payloads
-            this.lintoWatcher = await new LintoOverwatch()
-
-            this.webServer = await require('./webserver')
-        } catch (error) {
-            console.error(error)
-            process.exit(1)
-        }
-    }
+  ]
 }
-
-new Ctl()
