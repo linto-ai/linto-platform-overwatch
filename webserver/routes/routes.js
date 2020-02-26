@@ -23,9 +23,10 @@ module.exports = (webServer, authMiddleware) => {
     '/overwatch': require('./overwatch')(webServer)
   }
 
-  authMiddleware.map(auth => {
-    routes[`/${auth.authType}/auth`] = require('./auth')(webServer, auth)
-  })
+  if (authMiddleware !== undefined)
+    authMiddleware.map(auth => {
+      routes[`/${auth.authType}/auth`] = require('./auth')(webServer, auth)
+    })
 
   return routes
 }

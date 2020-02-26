@@ -9,9 +9,9 @@ const OPTS = {
   passwordField: 'password',
 
   server: {
-    url: process.env.LDAP_SERVER_URL,
-    searchBase: process.env.LDAP_SERVER_SEARCH_BASE,
-    searchFilter: process.env.LDAP_SERVER_SEARCH_FILTER
+    url: process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_URL,
+    searchBase: process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_BASE,
+    searchFilter: process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_FILTER
   }
 }
 

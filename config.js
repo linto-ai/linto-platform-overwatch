@@ -37,35 +37,40 @@ function configureDefaults() {
 	try {
 		const envdefault = dotenv.parse(fs.readFileSync('.envdefault'))
 		//MQTT Configuration
-		process.env.MQTT_HOST = ifHas(process.env.MQTT_HOST, envdefault.MQTT_HOST)
-		process.env.MQTT_PORT = ifHas(process.env.MQTT_PORT, envdefault.MQTT_PORT)
-		process.env.MQTT_USER = ifHas(process.env.MQTT_USER, envdefault.MQTT_USER)
-		process.env.MQTT_PSW = ifHas(process.env.MQTT_PSW, envdefault.MQTT_PSW)
-		process.env.MQTT_KEEP_ALIVE = ifHas(process.env.MQTT_KEEP_ALIVE, envdefault.MQTT_KEEP_ALIVE)
+		process.env.LINTO_STACK_MQTT_HOST = ifHas(process.env.LINTO_STACK_MQTT_HOST, envdefault.LINTO_STACK_MQTT_HOST)
+		process.env.LINTO_STACK_MQTT_PORT = ifHas(process.env.LINTO_STACK_MQTT_PORT, envdefault.LINTO_STACK_MQTT_PORT)
+		process.env.LINTO_STACK_MQTT_KEEP_ALIVE = ifHas(process.env.LINTO_STACK_MQTT_KEEP_ALIVE, envdefault.LINTO_STACK_MQTT_KEEP_ALIVE)
+
+		process.env.LINTO_STACK_MQTT_USE_LOGIN = ifHas(process.env.LINTO_STACK_MQTT_USE_LOGIN, envdefault.LINTO_STACK_MQTT_USE_LOGIN)
+		if (process.env.LINTO_STACK_MQTT_USE_LOGIN === 'true') {
+			process.env.LINTO_STACK_MQTT_USER = ifHas(process.env.LINTO_STACK_MQTT_USER, envdefault.LINTO_STACK_MQTT_USER)
+			process.env.LINTO_STACK_MQTT_PASSWORD = ifHas(process.env.LINTO_STACK_MQTT_PASSWORD, envdefault.LINTO_STACK_MQTT_PASSWORD)
+		}
 
 		//Mongo Configuration
-		process.env.MONGO_HOST = ifHas(process.env.MONGO_HOST, envdefault.MONGO_HOST)
-		process.env.MONGO_PORT = ifHas(process.env.MONGO_PORT, envdefault.MONGO_PORT)
-		process.env.MONGO_DB_NAME = ifHas(process.env.MONGO_DB_NAME, envdefault.MONGO_DB_NAME)
+		process.env.LINTO_STACK_MONGO_HOST = ifHas(process.env.LINTO_STACK_MONGO_HOST, envdefault.LINTO_STACK_MONGO_HOST)
+		process.env.LINTO_STACK_MONGO_PORT = ifHas(process.env.LINTO_STACK_MONGO_PORT, envdefault.LINTO_STACK_MONGO_PORT)
+		process.env.LINTO_STACK_MONGO_DB_NAME = ifHas(process.env.LINTO_STACK_MONGO_DB_NAME, envdefault.LINTO_STACK_MONGO_DB_NAME)
 
 		//Mongo collection
-		process.env.MONGO_COLLECTION_LINTOS = ifHas(process.env.MONGO_COLLECTION_LINTOS, envdefault.MONGO_COLLECTION_LINTOS)
-		process.env.MONGO_COLLECTION_LOG = ifHas(process.env.MONGO_COLLECTION_LOG, envdefault.MONGO_COLLECTION_LOG)
+		process.env.LINTO_STACK_MONGO_COLLECTION_LINTOS = ifHas(process.env.LINTO_STACK_MONGO_COLLECTION_LINTOS, envdefault.LINTO_STACK_MONGO_COLLECTION_LINTOS)
+		process.env.LINTO_STACK_MONGO_COLLECTION_LOG = ifHas(process.env.LINTO_STACK_MONGO_COLLECTION_LOG, envdefault.LINTO_STACK_MONGO_COLLECTION_LOG)
 
-		process.env.MONGO_USER = ifHas(process.env.MONGO_USER, envdefault.MONGO_USER)
-		process.env.MONGO_PSW = ifHas(process.env.MONGO_PSW, envdefault.MONGO_PSW)
+		process.env.LINTO_STACK_MONGO_USE_LOGIN = ifHas(process.env.LINTO_STACK_MONGO_USE_LOGIN, envdefault.LINTO_STACK_MONGO_USE_LOGIN)
+		if (process.env.LINTO_STACK_MONGO_USE_LOGIN === 'true') {
+			process.env.LINTO_STACK_MONGO_USER = ifHas(process.env.LINTO_STACK_MONGO_USER, envdefault.LINTO_STACK_MONGO_USER)
+			process.env.LINTO_STACK_MONGO_PASSWORD = ifHas(process.env.LINTO_STACK_MONGO_PASSWORD, envdefault.LINTO_STACK_MONGO_PASSWORD)
+		}
+		process.env.LINTO_OVERWATCH_HTTP_PORT = ifHas(process.env.LINTO_OVERWATCH_HTTP_PORT, envdefault.LINTO_OVERWATCH_HTTP_PORT)
 
-		process.env.PORT = ifHas(process.env.PORT, envdefault.PORT)
+		process.env.LINTO_OVERWATCH_AUTH_TYPE = ifHas(process.env.LINTO_OVERWATCH_AUTH_TYPE, envdefault.LINTO_OVERWATCH_AUTH_TYPE)
 
-
-		process.env.AUTH_TYPE = ifHas(process.env.AUTH_TYPE, envdefault.AUTH_TYPE)
-
-		process.env.AUTH_TYPE.split(',').map(auth => {
+		process.env.LINTO_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
 			//TODO: Check if particular auth settings
 			if (auth === 'ldap') {
-				process.env.LDAP_SERVER_URL = ifHas(process.env.LDAP_SERVER_URL, envdefault.LDAP_SERVER_URL)
-				process.env.LDAP_SERVER_SEARCH_BASE = ifHas(process.env.LDAP_SERVER_SEARCH_BASE, envdefault.LDAP_SERVER_SEARCH_BASE)
-				process.env.LDAP_SERVER_SEARCH_FILTER = ifHas(process.env.LDAP_SERVER_SEARCH_FILTER, envdefault.LDAP_SERVER_SEARCH_FILTER)
+				process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_URL = ifHas(process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_URL, envdefault.LINTO_OVERWATCH_AUTH_LDAP_SERVER_URL)
+				process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_BASE = ifHas(process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_BASE, envdefault.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_BASE)
+				process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_FILTER = ifHas(process.env.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_FILTER, envdefault.LINTO_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_FILTER)
 			}
 		})
 

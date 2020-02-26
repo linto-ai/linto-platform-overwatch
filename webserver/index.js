@@ -41,8 +41,8 @@ class WebServer extends EventEmitter {
   }
 
   async init() {
-    this.app.listen(process.env.PORT, function () {
-      debug(`Express launch on ${process.env.PORT}`)
+    this.app.listen(process.env.LINTO_OVERWATCH_HTTP_PORT, function () {
+      debug(`Express launch on ${process.env.LINTO_OVERWATCH_HTTP_PORT}`)
     })
     return this
   }

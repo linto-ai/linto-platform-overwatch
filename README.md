@@ -26,21 +26,21 @@ The file `.envdefault` contain the recommended default configuration that we sug
 If you want to use the default environement then copy the file `cp .envdefault .env`. You can update the `.env` file to manage your personal configuration if needed
 
 Information about mqtt server
-* `MQTT_HOST` : MQTT host address
-* `MQTT_PORT` : MQTT running port (mqtt default : 1883)
+* `LINTO_STACK_MQTT_HOST` : MQTT host address
+* `LINTO_STACK_MQTT_PORT` : MQTT running port (mqtt default : 1883)
 
 Information about Mongo
-* `MONGO_HOST` : mongodb host address
-* `MONGO_PORT` : mongodb running port (mongo default port : 27017)
-* `MONGO_DB_NAME` : mongodb database name (default linto)
-* `MONGO_COLLECTION_LINTOS` : LinTO collection name for linto-platform-admin mongoDb collection (default lintos)
-* `MONGO_COLLECTION_LOG` : LinTO collection name for log (default statusLog)
+* `LINTO_STACK_MONGO_HOST` : mongodb host address
+* `LINTO_STACK_MONGO_PORT` : mongodb running port (mongo default port : 27017)
+* `LINTO_STACK_MONGO_DB_NAME` : mongodb database name (default linto)
+* `LINTO_STACK_MONGO_COLLECTION_LINTOS` : LinTO collection name for linto-platform-admin mongoDb collection (default lintos)
+* `LINTO_STACK_MONGO_COLLECTION_LOG` : LinTO collection name for log (default statusLog)
 
 Depending of MongoDb and MQTT server settings, this parameter can be optional
-* `MQTT_USER` : MQTT authentication user
-* `MQTT_PSW` : MQTT authentication password
-* `MONGO_USER` : MongoDB authentication user
-* `MONGO_PSW` : MongoDB authentication password
+* `LINTO_STACK_MQTT_USER` : MQTT authentication user
+* `LINTO_STACK_MQTT_PASSWORD` : MQTT authentication password
+* `LINTO_STACK_MONGO_USER` : MongoDB authentication user
+* `LINTO_STACK_MONGO_PASSWORD` : MongoDB authentication password
 
 ### Run project
 Normal : `npm run start`
