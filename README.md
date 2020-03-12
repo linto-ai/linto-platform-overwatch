@@ -30,17 +30,17 @@ Information about mqtt server
 * `LINTO_STACK_MQTT_PORT` : MQTT running port (mqtt default : 1883)
 
 Information about Mongo
-* `LINTO_STACK_MONGO_HOST` : mongodb host address
-* `LINTO_STACK_MONGO_PORT` : mongodb running port (mongo default port : 27017)
-* `LINTO_STACK_MONGO_DB_NAME` : mongodb database name (default linto)
-* `LINTO_STACK_MONGO_COLLECTION_LINTOS` : LinTO collection name for linto-platform-admin mongoDb collection (default lintos)
-* `LINTO_STACK_MONGO_COLLECTION_LOG` : LinTO collection name for log (default statusLog)
+* `LINTO_STACK_MONGODB_SERVICE` : mongodb host address
+* `LINTO_STACK_MONGODB_PORT` : mongodb running port (mongo default port : 27017)
+* `LINTO_STACK_MONGODB_DBNAME` : mongodb database name (default linto)
+* `LINTO_STACK_MONGODB_COLLECTION_LINTOS` : LinTO collection name for linto-platform-admin mongoDb collection (default lintos)
+* `LINTO_STACK_MONGODB_COLLECTION_LOG` : LinTO collection name for log (default statusLog)
 
 Depending of MongoDb and MQTT server settings, this parameter can be optional
 * `LINTO_STACK_MQTT_USER` : MQTT authentication user
 * `LINTO_STACK_MQTT_PASSWORD` : MQTT authentication password
-* `LINTO_STACK_MONGO_USER` : MongoDB authentication user
-* `LINTO_STACK_MONGO_PASSWORD` : MongoDB authentication password
+* `LINTO_STACK_MONGODB_USER` : MongoDB authentication user
+* `LINTO_STACK_MONGODB_PASSWORD` : MongoDB authentication password
 
 ### Run project
 Normal : `npm run start`
