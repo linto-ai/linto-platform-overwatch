@@ -1,3 +1,6 @@
+# 1.0.2
+- Refactoring mongodb connector
+
 # 1.0.1
 - Added authentification system
 - Reworking of environement settings for linto-stack

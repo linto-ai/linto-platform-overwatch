@@ -5,9 +5,3 @@ services:
     build: .
     container_name: linto-platform-overwatch
     env_file: .env
-    networks:
-      - linto_net
-
-networks:
-  linto_net:
-    external: true
