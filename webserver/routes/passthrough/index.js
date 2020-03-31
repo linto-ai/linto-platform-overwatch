@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2018 Linagora.
  *
@@ -16,22 +17,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-const debug = require('debug')('linto-overwatch:webserver:routes:routes')
 
-module.exports = (webServer, authMiddleware) => {
-  let routes = {
-    '/overwatch': require('./overwatch')(webServer)
-  }
+'use strict'
+const debug = require('debug')('linto-overwatch:webserver:overwatch')
 
-  if (authMiddleware !== undefined) {
-    authMiddleware.map(auth => {
-      routes[`/${auth.authType}/auth`] = require('./auth')(webServer, auth)
-    })
-  }
-
-  if (process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE === 'passthrough') {
-    routes['/passthrough'] = require('./passthrough')(webServer)
-  }
-
-  return routes
+module.exports = (webServer) => {
+  return [
+    {
+      name: 'login',
+      path: '/login',
+      method: 'post',
+      controller: async (req, res, next) => {
+        res.status(202).json({ user: "fake" })
+      },
+    },
+    {
+      name: 'isAuth',
+      path: '/isAuth',
+      method: 'get',
+      controller: async (req, res, next) => {
+        res.status(202).json({ user: "fake" })
+      },
+    }
+  ]
 }

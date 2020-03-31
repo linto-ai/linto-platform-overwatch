@@ -31,7 +31,6 @@ class Route {
 
     for (let level in routes) {
       routes[level].map(route => {
-
         let controller = ifHasElse(
           Array.isArray(route.controller),
           () => Object.values(route.controller),

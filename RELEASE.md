@@ -1,4 +1,5 @@
 # 1.0.2
+- Added passthrough auth mode
 - Refactoring mongodb connector
 
 # 1.0.1
