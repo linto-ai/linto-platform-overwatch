@@ -36,7 +36,7 @@ module.exports = (webServer) => {
       path: '/isAuth',
       method: 'get',
       controller: async (req, res, next) => {
-        res.status(202).json({ user: "fake" })
+        res.status(202).json({ auth: "true" })
       },
     }
   ]

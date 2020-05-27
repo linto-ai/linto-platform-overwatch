@@ -36,6 +36,9 @@ function ifHas(element, defaultValue) {
 function configureDefaults() {
 	try {
 		const envdefault = dotenv.parse(fs.readFileSync('.envdefault'))
+
+		process.env.LINTO_STACK_OVERWATCH_BASE_PATH = ifHas(process.env.LINTO_STACK_OVERWATCH_BASE_PATH, envdefault.LINTO_STACK_OVERWATCH_BASE_PATH)
+
 		//MQTT Configuration
 		process.env.LINTO_STACK_MQTT_HOST = ifHas(process.env.LINTO_STACK_MQTT_HOST, envdefault.LINTO_STACK_MQTT_HOST)
 		process.env.LINTO_STACK_MQTT_PORT = ifHas(process.env.LINTO_STACK_MQTT_PORT, envdefault.LINTO_STACK_MQTT_PORT)

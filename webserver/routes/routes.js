@@ -19,18 +19,19 @@
 const debug = require('debug')('linto-overwatch:webserver:routes:routes')
 
 module.exports = (webServer, authMiddleware) => {
-  let routes = {
-    '/overwatch': require('./overwatch')(webServer)
-  }
+  let basePath = process.env.LINTO_STACK_OVERWATCH_BASE_PATH
+  let routes = {}
+
+  routes[`${basePath}`] = require('./overwatch')(webServer)
 
   if (authMiddleware !== undefined) {
     authMiddleware.map(auth => {
-      routes[`/${auth.authType}/auth`] = require('./auth')(webServer, auth)
+      routes[`${basePath}/${auth.authType}/auth`] = require('./auth')(webServer, auth)
     })
   }
 
   if (process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE === 'passthrough') {
-    routes['/passthrough'] = require('./passthrough')(webServer)
+    routes[`${basePath}/passthrough`] = require('./passthrough')(webServer)
   }
 
   return routes
