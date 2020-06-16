@@ -26,13 +26,8 @@ module.exports = (webServer, authMiddleware) => {
 
   if (authMiddleware !== undefined) {
     authMiddleware.map(auth => {
-      routes[`${basePath}/${auth.authType}/auth`] = require('./auth')(webServer, auth)
+      routes[`${basePath}/${auth.authType}`] = require('./auth')(webServer, auth)
     })
   }
-
-  if (process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE === 'passthrough') {
-    routes[`${basePath}/passthrough`] = require('./passthrough')(webServer)
-  }
-
   return routes
 }

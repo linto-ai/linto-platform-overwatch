@@ -1,3 +1,7 @@
+# 1.0.3
+- Reworking of local auth
+- Added support mongodb with linto-mongodb
+
 # 1.0.2
 - Added passthrough auth mode
 - Refactoring mongodb connector

@@ -1,22 +1,25 @@
 const debug = require('debug')('linto-overwatch:webserver:config:passport:local')
 
-const mongoose = require('mongoose')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
-const Users = mongoose.model('Users')
+const Users = require(process.cwd() + '/lib/overwatch/mongodb/models/linto_users')
 
 const STRATEGY = new LocalStrategy({
-  usernameField: 'user[email]',
-  passwordField: 'user[password]',
-}, (email, password, done) => {
-  Users.findOne({ email })
+  usernameField: 'username',
+  passwordField: 'password',
+}, (username, password, done) => {
+  Users.findOne({ email: username })
     .then((user) => {
-      if (!user || !user.validatePassword(password)) {
-        return done(null, false, { errors: { 'email or password': 'is invalid' } })
+      if (!user || !Users.validatePassword(password, user)) {
+        return done(null, false, { errors: 'Invalid credential' })
       }
 
-      return done(null, user)
+      return done(null, {
+        _id: user.id,
+        email: user.email,
+        token: Users.toAuthJSON(user).token,
+      })
     }).catch(done)
 })
 

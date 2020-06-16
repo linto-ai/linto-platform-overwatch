@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2018 Linagora.
  *
@@ -22,14 +21,26 @@
 const debug = require('debug')('linto-overwatch:webserver:overwatch')
 
 module.exports = (webServer) => {
-  return [
-    {
-      name: 'health',
-      path: '/health',
-      method: 'get',
-      controller: async (req, res, next) => {
-        res.sendStatus(200)
-      }
-    }
-  ]
+    return [
+        {
+            name: 'health',
+            path: '/health',
+            method: 'get',
+            controller: async (req, res, next) => {
+                res.sendStatus(200)
+            }
+        },
+        {
+            name: 'auths',
+            path: '/auths',
+            method: 'get',
+            controller: async (req, res, next) => {
+                let authMethods = []
+                process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
+                    authMethods.push({type : auth, basePath : `/${auth}`})
+                })
+                res.status(200).json(authMethods)
+            }
+        }
+    ]
 }

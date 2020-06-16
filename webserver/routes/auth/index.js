@@ -21,27 +21,31 @@
 'use strict'
 const debug = require('debug')('linto-overwatch:webserver:auth:basic')
 
+const scopesApi = require(process.cwd() + '/webserver/api/scopes')
+
 module.exports = (webServer, auth) => {
   return [
     {
       name: 'login',
-      path: '/',
+      path: '/login',
       method: 'post',
       controller: [
         auth.authenticate,
         (req, res, next) => {
-          res.status(202).json(req.user)
+          let output = scopesApi.formatAuth(req.user)
+          res.status(202).json(output)
         }
       ],
     },
     {
-      name: 'isAuth',
-      path: '/',
+      name: 'scopes',
+      path: '/scopes',
       method: 'get',
       controller: [
         (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
         (req, res, next) => {
-          res.status(202).json(req.user)
+          let output = scopesApi.getScopesList(req.payload.id)
+          res.status(200).json(output)
         }
       ]
     }

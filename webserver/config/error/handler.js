@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2018 Linagora.
  *
@@ -17,27 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 'use strict'
-const debug = require('debug')('linto-overwatch:webserver:overwatch')
 
-module.exports = (webServer) => {
-  return [
-    {
-      name: 'login',
-      path: '/login',
-      method: 'post',
-      controller: async (req, res, next) => {
-        res.status(202).json({ user: "fake" })
-      },
-    },
-    {
-      name: 'isAuth',
-      path: '/isAuth',
-      method: 'get',
-      controller: async (req, res, next) => {
-        res.status(202).json({ auth: "true" })
-      },
+var initByAuthType = function (webserver) {
+  process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
+    if (auth === 'local') {
+      webserver.app.use(function (err, req, res, next) {
+        if (err.name === 'UnauthorizedError') {
+          res.status(err.status).send({ message: err.message })
+          console.error(err)
+          return
+        }
+        next()
+      })
     }
-  ]
+  })
+}
+
+module.exports = {
+  initByAuthType
 }

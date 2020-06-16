@@ -24,6 +24,8 @@ const bodyParser = require('body-parser')
 const EventEmitter = require('eventemitter3')
 const passport = require('passport')
 
+const WebServerErrorHandler = require('./config/error/handler')
+
 class WebServer extends EventEmitter {
   constructor() {
     super()
@@ -36,6 +38,8 @@ class WebServer extends EventEmitter {
 
     this.app.use(passport.initialize())
     this.app.use(passport.session())  // Optional
+
+    WebServerErrorHandler.initByAuthType(this)
 
     return this.init()
   }

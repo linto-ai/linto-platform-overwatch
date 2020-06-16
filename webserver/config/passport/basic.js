@@ -1,10 +1,9 @@
 const debug = require('debug')('linto-overwatch:webserver:config:passport:basic')
 
-const mongoose = require('mongoose')
 const passport = require('passport')
 const BasicStrategy = require('passport-http').BasicStrategy
 
-const Users = mongoose.model('Users')
+const Users = require(process.cwd()+'/lib/overwatch/mongodb/models/linto_users')
 
 const STRATEGY = new BasicStrategy((email, password, done) => {
   Users.findOne({ email })

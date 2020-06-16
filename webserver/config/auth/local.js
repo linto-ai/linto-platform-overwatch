@@ -4,15 +4,14 @@ require('../passport/local')
 const passport = require('passport')
 const jwt = require('express-jwt')
 
-const mongoose = require('mongoose')
-const Users = mongoose.model('Users')
+const Users = require(process.cwd() + '/lib/overwatch/mongodb/models/linto_users')
 
 module.exports = {
   authType: 'local',
   authenticate: passport.authenticate('local', { session: false }),
   isAuthenticate: [
     jwt({
-      secret: 'secret',
+      secret: process.env.LINTO_STACK_OVERWATCH_JWT_SECRET,
       userProperty: 'payload',
       getToken: getTokenFromHeaders,
     }),
@@ -21,10 +20,9 @@ module.exports = {
 
       return Users.findById(id)
         .then((user) => {
-          if (!user)
+          if (!user) {
             return res.sendStatus(400)
-
-          res.json({ user: user.toAuthJSON() })
+          }
           next()
         })
     }
