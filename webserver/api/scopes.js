@@ -18,7 +18,7 @@ class ScopesApi {
     }
 
     let output = {
-      user : {
+      user: {
         ...user.token
       },
       mqtt: mqttConfig
@@ -30,17 +30,17 @@ class ScopesApi {
     return [
       {
         topic: "blk",
-        name: "nom",
+        name: "default",
         description: "description of blk"
       },
       {
         topic: "test",
-        name: "nom",
+        name: "test",
         description: "description of test"
       }
     ]
-    return { 'scopes': { 'blk': 'blk', 'test': 'test' } }
   }
 }
+
 
 module.exports = new ScopesApi()
