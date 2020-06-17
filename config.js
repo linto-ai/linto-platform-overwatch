@@ -37,6 +37,7 @@ function configureDefaults() {
 	try {
 		const envdefault = dotenv.parse(fs.readFileSync('.envdefault'))
 
+		process.env.LINTO_STACK_DOMAIN = ifHas(process.env.LINTO_STACK_DOMAIN, envdefault.LINTO_STACK_DOMAIN)
 		process.env.LINTO_STACK_OVERWATCH_BASE_PATH = ifHas(process.env.LINTO_STACK_OVERWATCH_BASE_PATH, envdefault.LINTO_STACK_OVERWATCH_BASE_PATH)
 
 		//MQTT Configuration

@@ -6,7 +6,7 @@ class ScopesApi {
 
   formatAuth(user) {
     let mqttConfig = {
-      mqtt_host: process.env.LINTO_STACK_MQTT_HOST,
+      mqtt_host: process.env.LINTO_STACK_DOMAIN,
       mqtt_port: process.env.LINTO_STACK_MQTT_PORT,
       mqtt_use_login: false
     }
