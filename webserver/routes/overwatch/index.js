@@ -23,8 +23,8 @@ const debug = require('debug')('linto-overwatch:webserver:overwatch')
 module.exports = (webServer) => {
     return [
         {
-            name: 'health',
-            path: '/health',
+            name: 'healthcheck',
+            path: '/healthcheck',
             method: 'get',
             controller: async (req, res, next) => {
                 res.sendStatus(200)

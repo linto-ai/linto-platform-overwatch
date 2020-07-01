@@ -1,29 +1,30 @@
-
 # LinTO-Platform-Overwatch
 
-This services is mandatory in a complete LinTO platform stack.
-The overwatch covered process are :
+This service is mandatory in a complete LinTO platform stack.
+These covered process are :
 - MQTT global subscriber for a fleet of LinTO clients
-- Registers every events in a persistent storage
+- Register every events in a persistent storage
 - Enable different authentication system
 
 ## Usage
 See documentation : [doc.linto.ai](https://doc.linto.ai)
 
 ## API
-Overwatch have an API with different functionality. This API is customizable :
-- The base path of all service is customizable (settings the environment variable : `LINTO_STACK_OVERWATCH_BASE_PATH`)
-- An authentication module can be enable or disable (settings the environement `LINTO_STACK_OVERWATCH_AUTH_TYPE`
+Overwatch API has the following feature
+- Customizable api base path (setting the environment variable : `LINTO_STACK_OVERWATCH_BASE_PATH`)
+- Authentication module can be enable or disable (environement `LINTO_STACK_OVERWATCH_AUTH_TYPE`, note that only local authentication method is supported for the moment)
 
-
-More information about overwatch API can be found :
+More information about there API can be found :
 
 **Default API** :
 - [Overwatch API](doc/api/default.md)
 
 **Authentication APIC**:
 - [Local](doc/api/auth/local.md)
-- [LDAP - WIP](doc/api/auth/ldap.md)
+
+# Deploy
+
+With our proposed stack [linto-platform-stack](https://github.com/linto-ai/linto-platform-stack)
 
 # Develop
 

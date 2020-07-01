@@ -1,10 +1,11 @@
 # Default
-The default overwatch API, that allow to get basic information of the service running, authentication methods running, ...
+Default overwatch API, allow to get basic information of the service running, authentication methods running, ...
 
 ## Healths
-Check if the service is running
 
-**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/health`
+Health checks for overwatch service
+
+**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/healthcheck`
 
 **Method** : `GET`
 
@@ -20,7 +21,7 @@ OK
 ```
 
 ## Authentication methods
-Give the server authentication methode enable
+List of enable authentication services
 
 **URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/auths`
 
