@@ -72,11 +72,11 @@ Used to collect scopes for a registered User.
 **Data header constraints**
 
 ```
-Authorization : Token auth_user_token
+Authorization : Android auth_user_token
 ```
 **Data header example**
 ```
-Authorization : Token XXXXXXXXXXXXXXXXXXXXXXXXXXX
+Authorization : Android XXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ### Success Response
@@ -92,8 +92,8 @@ Authorization : Token XXXXXXXXXXXXXXXXXXXXXXXXXXX
     "description": "Default scope"
   },
   {
-    "topic": "test",
-    "name": "Scopes test",
+    "topic": "LNG",
+    "name": "Linagora",
     "description": "A small description of the scope"
   }
 ]

@@ -38,6 +38,17 @@ module.exports = (webServer, auth) => {
       ],
     },
     {
+      name: 'isAuth',
+      path: '/isAuth',
+      method: 'get',
+      controller: [
+        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (req, res, next) => {
+          res.status(200).send('Ok')
+        }
+      ]
+    },
+    {
       name: 'scopes',
       path: '/scopes',
       method: 'get',
