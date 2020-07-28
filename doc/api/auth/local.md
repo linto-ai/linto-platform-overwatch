@@ -1,10 +1,11 @@
 # Local
 Authentication module using an username and password. This authentication method is based on JWTs (Json Web Tokens)
+User are based on linto-admin component.
 
-## Login
-Used to collect information when authentication is successful (authentication Token, refresh Token and mqtt information of the current stack).
+## Android Login
+Used to collect information when android authentication is successful (authentication Token, refresh Token and mqtt information of the current stack).
 
-**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/local/login/`
+**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/local/android/login/`
 
 **Method** : `POST`
 
@@ -29,6 +30,8 @@ Used to collect information when authentication is successful (authentication To
 ### Success Response
 
 **Code** : `202 Accepted`
+
+**Info** Generate an `Android` token type
 
 **Body Content**
 ```json
@@ -60,10 +63,62 @@ Used to collect information when authentication is successful (authentication To
 Unauthorized
 ```
 
-## Scopes
+
+## Web Login
+Used to collect information when authentication is successful (authentication Token).
+
+**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/local/web/login/`
+
+**Method** : `POST`
+
+**Auth required** : NO
+
+**Data constraints**
+```json
+{
+    "requestToken": "[Token generate by linto admin]",
+    "url": "[url]"
+}
+```
+
+**Data example**
+```json
+{
+    "requestToken": "XXXXXXXXXXXXXXXX",
+    "url": "https://linto.ai/"
+}
+```
+
+### Success Response
+
+**Code** : `202 Accepted`
+
+**Info** Generate an `WebApplication` token type
+
+**Body Content**
+```json
+{
+  "user": {
+    "auth_token": "YYYYYYYYYYYYYYYYYYYYYYYYYYY"
+  }
+}
+```
+
+### Error Response
+
+**Condition** : If 'requestToken' and 'url' combination is wrong.
+
+**Code** : `401 Unauthorized`
+
+**Body Content** :
+```
+Unauthorized
+```
+
+## Applications
 Used to collect scopes for a registered User.
 
-**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/local/scopes/`
+**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/local/applications/`
 
 **Method** : `GET`
 

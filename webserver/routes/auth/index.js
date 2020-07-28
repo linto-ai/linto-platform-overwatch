@@ -27,10 +27,22 @@ module.exports = (webServer, auth) => {
   return [
     {
       name: 'login',
-      path: '/login',
+      path: '/android/login',
       method: 'post',
       controller: [
-        auth.authenticate,
+        auth.authenticate_android,
+        (req, res, next) => {
+          let output = scopesApi.formatAuth(req.user)
+          res.status(202).json(output)
+        }
+      ],
+    },
+    {
+      name: 'login',
+      path: '/web/login',
+      method: 'post',
+      controller: [
+        auth.authenticate_web,
         (req, res, next) => {
           let output = scopesApi.formatAuth(req.user)
           res.status(202).json(output)

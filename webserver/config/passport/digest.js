@@ -3,7 +3,7 @@ const debug = require('debug')('linto-overwatch:webserver:config:passport:digest
 const passport = require('passport')
 const DigestStrategy = require('passport-http').DigestStrategy
 
-const Users = require(process.cwd()+'/lib/overwatch/mongodb/models/linto_users')
+const Users = require(process.cwd()+'/lib/overwatch/mongodb/models/android_users')
 
 let strategy = new DigestStrategy({ qop: 'auth' },
   (username, done) => {
