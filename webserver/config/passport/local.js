@@ -4,8 +4,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
-//TODO: WIP need to implement the web_auth system
-const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
+const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_users')
 
 
 const jwt = require('jsonwebtoken')
@@ -39,10 +38,12 @@ function generateUserTokenAndroid(username, password, authType, done) {
           return done(null, false, { errors: 'Unable to generate keyToken' })
       })
 
+      let authSecret = tokenSalt + authType
+
       return done(null, {
         _id: user.id,
         email: user.email,
-        token: toAuthJSON(user, tokenSalt + authType).token,
+        token: toAuthJSON(user, authSecret, authType).token,
       })
     }).catch(done)
 }
@@ -62,47 +63,61 @@ passport.use('local-web', STRATEGY_WEB)
 passport.use('local-android', STRATEGY_ANDROID)
 
 
-function generateUserTokenWeb(username, password, authSecret, done) {
-  UsersWeb.findOne({ email: username })
+function generateUserTokenWeb(url, requestToken, authType, done) {
+  UsersWeb.findOne({ originUrl: url })
     .then((user) => {
-      if (!user || !UsersWeb.validatePassword(password, user)) {
+      if (!user || !UsersWeb.validToken(requestToken, user)) {
         return done(null, false, { errors: 'Invalid credential' })
       }
+
+      let tokenSalt = "temp" //TODO: WIP
+      let authSecret = authType
+
+      //TODO: MANAGE NO MORE SLOT
       return done(null, {
-        _id: user.id,
-        email: user.email,
-        token: toAuthJSON(user, authSecret).token,
+        _id: user._id,
+        url: url,
+        token: toAuthJSON(user, authSecret, authType).token,
       })
     }).catch(done)
 }
 
-function generateJWT(user, authSecret) {
+function generateJWT(data, authSecret) {
   const today = new Date()
   const expirationDate = new Date(today)
   expirationDate.setDate(today.getDate() + 60)
 
   return {
     auth_token: jwt.sign({
-      email: user.email,
-      id: user._id,
+      data,
       exp: parseInt(expirationDate.getTime() / 1000, TOKEN_DAYS_TIME),
     }, authSecret + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET),
     refresh_token: jwt.sign({
-      email: user.email,
-      id: user._id,
+      data,
       exp: parseInt(expirationDate.getTime() / 1000, REFRESH_TOKEN_DAYS_TIME),
     }, authSecret + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET),
 
     expiration_date: parseInt(expirationDate.getTime() / 1000, 10),
-    session_id: user._id
+    session_id: data.sessionId
   }
 }
 
-function toAuthJSON(user, authSecret) {
-  let token = generateJWT(user, authSecret)
+function toAuthJSON(user, authSecret, type) {
+  let data = {
+    id: user._id
+  }
+  if (type === ANDROID_WEB) {
+    data.email = user.email
+    data.sessionId = user._id
+  } else if (type === TOKEN_WEB) {
+    data.originUrl = user.originUrl
+    data.sessionId = randomstring.generate(5)
+  }
+
+  let token = generateJWT(data, authSecret)
+
   return {
     _id: user._id,
-    email: user.email,
-    token: token,
+    token: token
   }
 }

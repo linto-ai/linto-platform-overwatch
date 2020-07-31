@@ -21,7 +21,9 @@
 'use strict'
 const debug = require('debug')('linto-overwatch:webserver:auth:basic')
 
-const scopesApi = require(process.cwd() + '/webserver/api/scopes')
+const workflowApplication = require(process.cwd() + '/webserver/lib/workflowApplication')
+const User = require(process.cwd() + '/webserver/lib/user')
+const authWrapper = require(process.cwd() + '/webserver/lib/authWrapper')
 
 module.exports = (webServer, auth) => {
   return [
@@ -32,10 +34,22 @@ module.exports = (webServer, auth) => {
       controller: [
         auth.authenticate_android,
         (req, res, next) => {
-          let output = scopesApi.formatAuth(req.user)
+          let output = authWrapper.formatAuth(req.user)
           res.status(202).json(output)
         }
       ],
+    },
+    {
+      name: 'logout',
+      path: '/android/logout',
+      method: 'get',
+      controller: [
+        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (req, res, next) => {
+          User.logout(req.payload.data)
+          res.status(200).send('Ok')
+        }
+      ]
     },
     {
       name: 'login',
@@ -44,7 +58,7 @@ module.exports = (webServer, auth) => {
       controller: [
         auth.authenticate_web,
         (req, res, next) => {
-          let output = scopesApi.formatAuth(req.user)
+          let output = authWrapper.formatAuth(req.user)
           res.status(202).json(output)
         }
       ],
@@ -67,8 +81,12 @@ module.exports = (webServer, auth) => {
       controller: [
         (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
         (req, res, next) => {
-          let output = scopesApi.getScopesList(req.payload.id)
-          res.status(200).json(output)
+          workflowApplication.getWorkflowApp(req.payload.data)
+            .then(scopes => {
+              res.status(200).json(scopes)
+            }).catch(err => {
+              res.status(500).send('Can\'t retrieve scope')
+            })
         }
       ]
     }

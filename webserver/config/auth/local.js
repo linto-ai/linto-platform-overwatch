@@ -5,9 +5,7 @@ const passport = require('passport')
 const jwt = require('express-jwt')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
-
-//TODO: WIP need to implement the web_auth system
-const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
+const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_users')
 
 module.exports = {
   authType: 'local',
@@ -29,15 +27,15 @@ function generateSecretFromHeaders(req, payload, done) {
   const { headers: { authorization } } = req
 
   if (authorization && authorization.split(' ')[0] === 'Android') {
-    UsersAndroid.findOne({ email: payload.email })
+    UsersAndroid.findOne({ email: payload.data.email })
       .then((user) => {
         done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
       })
   }
   else if (authorization && authorization.split(' ')[0] === 'WebApplication') {
-    UsersWeb.findOne({ email: payload.email })
+    UsersWeb.findOne({ originUrl: payload.data.originUrl })
       .then((user) => {
-        done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
+        done(null, authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
       })
   }else {
     done('Unknown token type')

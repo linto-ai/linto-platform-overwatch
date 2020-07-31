@@ -1,8 +1,7 @@
-const debug = require('debug')('linto-overwatch:overwatch:webserver:api:scopes')
+const debug = require('debug')('linto-overwatch:overwatch:webserver:lib:authWrapper')
 
-class ScopesApi {
-  constructor() {
-  }
+class AuthWrapper {
+  constructor() { }
 
   formatAuth(user) {
     let mqttConfig = {
@@ -25,22 +24,7 @@ class ScopesApi {
     }
     return output
   }
-
-  getScopesList(user) {
-    return [
-      {
-        topic: "blk",
-        name: "default",
-        description: "description of blk"
-      },
-      {
-        topic: "test",
-        name: "test",
-        description: "description of test"
-      }
-    ]
-  }
 }
 
 
-module.exports = new ScopesApi()
+module.exports = new AuthWrapper()
