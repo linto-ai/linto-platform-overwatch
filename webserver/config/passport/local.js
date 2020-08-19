@@ -4,7 +4,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
-const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_users')
+const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
 
 
 const jwt = require('jsonwebtoken')
@@ -54,7 +54,7 @@ const TOKEN_WEB = 'WebApplication'
 const STRATEGY_WEB = new LocalStrategy({
   usernameField: 'url',
   passwordField: 'requestToken'
-}, (requestToken, url, done) => {
+}, (url, requestToken, done) => {
   generateUserTokenWeb(url, requestToken, TOKEN_WEB, done)
 })
 
@@ -62,18 +62,17 @@ const STRATEGY_WEB = new LocalStrategy({
 passport.use('local-web', STRATEGY_WEB)
 passport.use('local-android', STRATEGY_ANDROID)
 
-
 function generateUserTokenWeb(url, requestToken, authType, done) {
   UsersWeb.findOne({ originUrl: url })
     .then((user) => {
-      if (!user || !UsersWeb.validToken(requestToken, user)) {
+      if (!user || !UsersWeb.validUserToken(requestToken, user)) {
         return done(null, false, { errors: 'Invalid credential' })
       }
 
-      let tokenSalt = "temp" //TODO: WIP
       let authSecret = authType
-
       //TODO: MANAGE NO MORE SLOT
+
+
       return done(null, {
         _id: user._id,
         url: url,

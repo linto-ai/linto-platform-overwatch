@@ -1,7 +1,7 @@
 const debug = require('debug')('linto-overwatch:overwatch:webserver:lib:workflow')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
-const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_users')
+const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
 
 const Workflow = require(process.cwd() + '/lib/overwatch/mongodb/models/workflows_application')
 

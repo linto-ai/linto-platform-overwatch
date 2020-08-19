@@ -5,7 +5,7 @@ const passport = require('passport')
 const jwt = require('express-jwt')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
-const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_users')
+const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
 
 module.exports = {
   authType: 'local',
