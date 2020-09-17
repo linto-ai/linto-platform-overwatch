@@ -28,16 +28,19 @@ function generateSecretFromHeaders(req, payload, done) {
 
   if (authorization && authorization.split(' ')[0] === 'Android') {
     UsersAndroid.findOne({ email: payload.data.email })
-      .then((user) => {
-        done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
-      })
-  }
-  else if (authorization && authorization.split(' ')[0] === 'WebApplication') {
+      .then(user => done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET))
+  } else if (authorization && authorization.split(' ')[0] === 'WebApplication') {
     UsersWeb.findOne({ originUrl: payload.data.originUrl })
-      .then((user) => {
-        done(null, authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
+      .then(webapp => {
+        webapp.applications.find(app => {
+          if (app.applicationId === payload.data.applicationId) {
+            //TODO: CHECK IF APP KNOW REGISTERED SLOT
+
+          }
+        })
+        done(null, payload.data.salt + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
       })
-  }else {
+  } else {
     done('Unknown token type')
   }
 
@@ -46,11 +49,8 @@ function generateSecretFromHeaders(req, payload, done) {
 function getTokenFromHeaders(req) {
   const { headers: { authorization } } = req
 
-  if (authorization && authorization.split(' ')[0] === 'Android') {
-    return authorization.split(' ')[1]
-  }
-  if (authorization && authorization.split(' ')[0] === 'WebApplication') {
-    return authorization.split(' ')[1]
-  }
+  if (authorization && authorization.split(' ')[0] === 'Android') return authorization.split(' ')[1]
+  if (authorization && authorization.split(' ')[0] === 'WebApplication') return authorization.split(' ')[1]
+
   return null
 }
