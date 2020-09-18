@@ -12,7 +12,6 @@ const REFRESH_TOKEN_DAYS_TIME = 14
 
 const randomstring = require('randomstring')
 
-
 const ANDROID_TOKEN = 'Android'
 const STRATEGY_ANDROID = new LocalStrategy({
   usernameField: 'email',
@@ -54,15 +53,14 @@ function generateUserTokenWeb(url, requestToken, authType, done) {
   UsersWeb.findOne({ originUrl: url })
     .then((webapp) => {
       let app = UsersWeb.validApplicationAuth(webapp, requestToken)
-      if (!app) return done(null, false, { errors: 'Authorisation error' })
-
-      const tokenSalt = randomstring.generate(12)
       webapp.application = app
+
+      if (!app) return done(null, false, { errors: 'Authorisation error' })
 
       return done(null, {
         _id: webapp._id,
         url: url,
-        token: toAuthJSON(webapp, tokenSalt, authType, app).token
+        token: toAuthJSON(webapp, randomstring.generate(12), authType, app).token
       })
     }).catch(done)
 }
@@ -75,10 +73,11 @@ function toAuthJSON(user, authSecret, type) {
   let expiration_time_days = 60
   if (type === ANDROID_TOKEN) {
     data.email = user.email
-    data.sessionId = user._id
+    data.sessionId = process.env.LINTO_STACK_OVERWATCH_DEV_TOPIC_KEY + user._id
   } else if (type === WEB_TOKEN) {
     data.originUrl = user.originUrl
     data.applicationId = user.application.applicationId
+    data.sessionId = process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12)
     data.salt = authSecret
     expiration_time_days = 1
   }
@@ -108,12 +107,12 @@ function generateJWT(data, authSecret, days = 60, type) {
       }, authSecret + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET),
 
       expiration_date: parseInt(expirationDate.getTime() / 1000, 10),
-      session_id: "DEV_" + data.sessionId
+      session_id: data.sessionId
     }
   } else {
     return {
       auth_token: auth_token,
-      session_id: "WEB_" + randomstring.generate(12)
+      session_id: data.sessionId
     }
   }
 }
