@@ -1,3 +1,7 @@
+# 1.1.0
+- Added Android auth
+- Added WebToken auth
+
 # 1.0.3
 - Reworking of local auth
 - Added support mongodb with linto-mongodb

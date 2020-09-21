@@ -56,6 +56,10 @@ module.exports = (webServer, auth) => {
       path: '/web/login',
       method: 'post',
       controller: [
+        (req, res, next) => {
+          req.body.originurl = req.hostname
+          next()
+        },
         auth.authenticate_web,
         (req, res, next) => {
           let output = authWrapper.formatAuth(req.user)
