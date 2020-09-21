@@ -73,7 +73,7 @@ function toAuthJSON(user, authSecret, type) {
   let expiration_time_days = 60
   if (type === ANDROID_TOKEN) {
     data.email = user.email
-    data.sessionId = process.env.LINTO_STACK_OVERWATCH_DEV_TOPIC_KEY + user._id
+    data.sessionId = process.env.LINTO_STACK_OVERWATCH_DEVICE_TOPIC_KEY + user._id
   } else if (type === WEB_TOKEN) {
     data.originUrl = user.originUrl
     data.applicationId = user.application.applicationId

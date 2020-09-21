@@ -5,9 +5,7 @@ const passport = require('passport')
 const jwt = require('express-jwt')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
-const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
-
-const slotsManager = require('../../../lib/overwatch/slotsManager/slotsManager')
+const SlotsManager = require('../../../lib/overwatch/slotsManager/slotsManager')
 
 module.exports = {
   authType: 'local',
@@ -31,7 +29,7 @@ function generateSecretFromHeaders(req, payload, done) {
     UsersAndroid.findOne({ email: payload.data.email })
       .then(user => done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET))
   } else if (authorization && authorization.split(' ')[0] === 'WebApplication') {
-    if (slotsManager.getSn(payload.data.sessionId))
+    if (SlotsManager.getSn(payload.data.sessionId))
       done(null, payload.data.salt + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
     else
       done(null, process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
