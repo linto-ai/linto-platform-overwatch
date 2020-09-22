@@ -21,7 +21,7 @@
 'use strict'
 const debug = require('debug')('linto-overwatch:webserver:auth:basic')
 
-const workflowApplication = require(process.cwd() + '/webserver/lib/workflowApplication')
+const WorkflowApplication = require(process.cwd() + '/webserver/lib/workflowApplication')
 const User = require(process.cwd() + '/webserver/lib/user')
 const authWrapper = require(process.cwd() + '/webserver/lib/authWrapper')
 
@@ -34,7 +34,7 @@ module.exports = (webServer, auth) => {
       controller: [
         auth.authenticate_android,
         (req, res, next) => {
-          let output = authWrapper.formatAuth(req.user)
+          let output = authWrapper.formatAuthAndroid(req.user)
           res.status(202).json(output)
         }
       ],
@@ -62,7 +62,7 @@ module.exports = (webServer, auth) => {
         },
         auth.authenticate_web,
         (req, res, next) => {
-          let output = authWrapper.formatAuth(req.user)
+          let output = authWrapper.formatAuthWeb(req.user)
           res.status(202).json(output)
         }
       ],
@@ -85,7 +85,7 @@ module.exports = (webServer, auth) => {
       controller: [
         (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
         (req, res, next) => {
-          workflowApplication.getWorkflowApp(req.payload.data)
+          WorkflowApplication.getWorkflowApp(req.payload.data)
             .then(scopes => {
               res.status(200).json(scopes)
             }).catch(err => {

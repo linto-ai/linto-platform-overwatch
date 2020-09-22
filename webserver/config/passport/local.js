@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
 const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
+const WorkflowApplication = require(process.cwd() + '/lib/overwatch/mongodb/models/workflows_application')
+
 
 const TOKEN_DAYS_TIME = 10
 const REFRESH_TOKEN_DAYS_TIME = 14
@@ -54,23 +56,26 @@ function generateUserTokenWeb(url, requestToken, authType, done) {
     .then((webapp) => {
       let app = UsersWeb.validApplicationAuth(webapp, requestToken)
       webapp.application = app
-
       if (!app) return done(null, false, { errors: 'Authorisation error' })
 
-      return done(null, {
-        _id: webapp._id,
-        url: url,
-        token: toAuthJSON(webapp, randomstring.generate(12), authType, app).token
-      })
+      WorkflowApplication.getScopesById(app.applicationId).then((topic) => {
+        webapp.topic = topic
+
+        return done(null, {
+          _id: webapp._id,
+          url: url,
+          token: toAuthJSON(webapp, randomstring.generate(12), authType, app).token
+        })
+      }).catch(done)
     }).catch(done)
 }
 
 function toAuthJSON(user, authSecret, type) {
+  let expiration_time_days = 60
   let data = {
     id: user._id
   }
 
-  let expiration_time_days = 60
   if (type === ANDROID_TOKEN) {
     data.email = user.email
     data.sessionId = process.env.LINTO_STACK_OVERWATCH_DEVICE_TOPIC_KEY + user._id
@@ -78,6 +83,7 @@ function toAuthJSON(user, authSecret, type) {
     data.originUrl = user.originUrl
     data.applicationId = user.application.applicationId
     data.sessionId = process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12)
+    data.topic = user.topic
     data.salt = authSecret
     expiration_time_days = 1
   }
@@ -112,6 +118,7 @@ function generateJWT(data, authSecret, days = 60, type) {
   } else {
     return {
       auth_token: auth_token,
+      topic: data.topic,
       session_id: data.sessionId
     }
   }
