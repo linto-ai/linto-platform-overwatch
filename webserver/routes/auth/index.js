@@ -57,7 +57,7 @@ module.exports = (webServer, auth) => {
       method: 'post',
       controller: [
         (req, res, next) => {
-          req.body.originurl = req.hostname
+          req.body.originurl = req.headers.host
           next()
         },
         auth.authenticate_web,
