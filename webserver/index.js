@@ -41,7 +41,8 @@ class WebServer extends EventEmitter {
 
     require('./routes')(this)
     this.app.use('/', express.static('public'))
-
+    
+    this.app.set('trust proxy', true);
     this.app.use(passport.initialize())
     this.app.use(passport.session())  // Optional
 
