@@ -35,11 +35,6 @@ module.exports = (webServer) => {
             path: '/auths',
             method: 'get',
             controller: async (req, res, next) => {
-                console.log(req.hostname)
-                console.log(req.headers)
-                console.log(req.ips)
-                console.log(req.connection.remoteAddress)
-                console.log(req.get('host'))
                 let authMethods = []
                 process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
                     authMethods.push({type : auth, basePath : `/${auth}`})
