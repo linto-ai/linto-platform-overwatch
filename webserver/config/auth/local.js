@@ -7,7 +7,7 @@ const jwt = require('express-jwt')
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
 const SlotsManager = require(process.cwd() + '/lib/overwatch/slotsManager/slotsManager')
 
-const { NoSecretFound, UnreservedSlot } = require('../error/exception/auth')
+const { UnreservedSlot, MalformedToken } = require('../error/exception/auth')
 
 module.exports = {
   authType: 'local',
@@ -33,15 +33,20 @@ function getTokenFromHeaders(req, res, next) {
 }
 
 function generateSecretFromHeaders(req, payload, done) {
-  const { headers: { authorization } } = req
-  if (authorization.split(' ')[0] === 'Android') {
-    UsersAndroid.findOne({ email: payload.data.email })
-      .then(user => done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET))
-  } else if (authorization.split(' ')[0] === 'WebApplication') {
-    if (SlotsManager.getSn(payload.data.sessionId)) {
-      done(null, payload.data.salt + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
+  if (!payload || !payload.data) {
+    done(new MalformedToken())
+  } else {
+
+    const { headers: { authorization } } = req
+    if (authorization.split(' ')[0] === 'Android') {
+      UsersAndroid.findOne({ email: payload.data.email })
+        .then(user => done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET))
+    } else if (authorization.split(' ')[0] === 'WebApplication') {
+      if (SlotsManager.getSn(payload.data.sessionId)) {
+        done(null, payload.data.salt + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
+      } else {
+        done(new UnreservedSlot())
+      }
     }
-    done(new UnreservedSlot())
   }
-  done(new NoSecretFound())
 }

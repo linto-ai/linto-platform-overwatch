@@ -1,3 +1,23 @@
+class InvalidCredential extends Error {
+  constructor(message) {
+    super()
+    this.name = 'InvalidCredential'
+    this.status = '401'
+    if (message) this.message = message
+    else this.message = 'Wrong user credential'
+  }
+}
+
+class MalformedToken extends Error {
+  constructor(message) {
+    super()
+    this.name = 'MalformedToken'
+    this.status = '401'
+    if (message) this.message = message
+    else this.message = 'The token is malformed'
+  }
+}
+
 class NoSecretFound extends Error {
   constructor(message) {
     super()
@@ -14,7 +34,7 @@ class NoSlotAvailable extends Error {
     this.name = 'NoSlotAvailable'
     this.status = '401'
     if (message) this.message = message
-    else this.message = 'No slot avaiable at the moment'
+    else this.message = 'No slot avaiable for the requested website'
   }
 }
 
@@ -29,6 +49,8 @@ class UnreservedSlot extends Error {
 }
 
 module.exports = {
+  InvalidCredential,
+  MalformedToken,
   NoSecretFound,
   NoSlotAvailable,
   UnreservedSlot

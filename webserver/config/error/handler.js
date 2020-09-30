@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-const { NoSecretFound, NoSlotAvailable, UnreservedSlot } = require('./exception/auth')
+const AuthsException = require('./exception/auth')
 
-const DEFAULT_JWT_EXCEPTION = 'UnauthorizedError'
-const customException = [NoSecretFound.name, NoSlotAvailable.name, UnreservedSlot.name, DEFAULT_JWT_EXCEPTION]
+let customException = ['UnauthorizedError'] // Default JWT exception
 
 let initByAuthType = function (webserver) {
+  Object.keys(AuthsException).forEach(key => customException.push(key))
+
   process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
     if (auth === 'local') {
       webserver.app.use(function (err, req, res, next) {
-
         if (customException.indexOf(err.name) > -1) {
           res.status(err.status).send({ message: err.message })
           console.error(err)

@@ -4,8 +4,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const jwt = require('jsonwebtoken')
 
-const { NoSecretFound, UnreservedSlot } = require('../error/exception/auth')
-
+const { NoSlotAvailable } = require('../error/exception/auth')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
 const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
@@ -72,8 +71,7 @@ function generateUserTokenWeb(url, requestToken, authType, done) {
             url: url,
             token: toAuthJSON(webapp, randomstring.generate(12), authType, app).token
           })
-        } else return done(null, false, { message: 'No more slot available' })
-
+        } else return done(new NoSlotAvailable())
       }).catch(done)
     }).catch(done)
 }
