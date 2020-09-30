@@ -56,15 +56,18 @@ function generateUserTokenWeb(url, requestToken, authType, done) {
     .then((webapp) => {
       let app = UsersWeb.validApplicationAuth(webapp, requestToken)
       webapp.application = app
-      if (!app) return done(null, false, { errors: 'Authorisation error' })
 
-      WorkflowApplication.getScopesById(app.applicationId).then((topic) => {
+      WorkflowApplication.getScopesById(app.applicationId).then(topic => {
         webapp.topic = topic
+        webapp.sessionId = process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12)
 
-        return done(null, {
-          _id: webapp._id,
-          url: url,
-          token: toAuthJSON(webapp, randomstring.generate(12), authType, app).token
+        UsersWeb.takeApplicationSlotOnLogin(url, app, webapp.sessionId).then(availableSlot => {
+          if (availableSlot) return done(null, {
+            _id: webapp._id,
+            url: url,
+            token: toAuthJSON(webapp, randomstring.generate(12), authType, app).token
+          })
+          return done(null, false, { message: 'No more slot available' })
         })
       }).catch(done)
     }).catch(done)
@@ -82,7 +85,7 @@ function toAuthJSON(user, authSecret, type) {
   } else if (type === WEB_TOKEN) {
     data.originUrl = user.originUrl
     data.applicationId = user.application.applicationId
-    data.sessionId = process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12)
+    data.sessionId = user.sessionId
     data.topic = user.topic
     data.salt = authSecret
     expiration_time_days = 1

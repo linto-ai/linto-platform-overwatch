@@ -25,5 +25,4 @@ class WorkflowsApplicationApi {
   }
 }
 
-
 module.exports = new WorkflowsApplicationApi()

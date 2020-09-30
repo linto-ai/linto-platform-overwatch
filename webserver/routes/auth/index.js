@@ -57,11 +57,11 @@ module.exports = (webServer, auth) => {
       method: 'post',
       controller: [
         (req, res, next) => {
+          req.headers.origin = 'localhost'
           if (req.headers.origin) {
             req.body.originurl = extractHostname(req.headers.origin)
             next()
           } else res.status(400).json('Origin headers is require')
-
         },
         auth.authenticate_web,
         (req, res, next) => {
@@ -100,7 +100,6 @@ module.exports = (webServer, auth) => {
   ]
 }
 
-
 function extractHostname(url) {
   let hostname
 
@@ -108,5 +107,5 @@ function extractHostname(url) {
   else hostname = url.split('/')[0]
 
   hostname = hostname.split(':')[0].split('?')[0]
-  return hostname;
+  return hostname
 }
