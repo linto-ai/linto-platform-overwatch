@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 const AuthsException = require('./exception/auth')
-
 let customException = ['UnauthorizedError'] // Default JWT exception
 
 let initByAuthType = function (webserver) {
@@ -26,6 +25,7 @@ let initByAuthType = function (webserver) {
   process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
     if (auth === 'local') {
       webserver.app.use(function (err, req, res, next) {
+        
         if (customException.indexOf(err.name) > -1) {
           res.status(err.status).send({ message: err.message })
           console.error(err)
