@@ -8,6 +8,8 @@ const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/andr
 const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
 const WorkflowApplication = require(process.cwd() + '/lib/overwatch/mongodb/models/workflows_application')
 
+const SlotsManager = require(process.cwd() + '/lib/overwatch/slotsManager/slotsManager')
+
 
 const TOKEN_DAYS_TIME = 10
 const REFRESH_TOKEN_DAYS_TIME = 14
@@ -61,14 +63,14 @@ function generateUserTokenWeb(url, requestToken, authType, done) {
         webapp.topic = topic
         webapp.sessionId = process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12)
 
-        UsersWeb.takeApplicationSlotOnLogin(url, app, webapp.sessionId).then(availableSlot => {
-          if (availableSlot) return done(null, {
+        if (SlotsManager.takeSlotIfAvailable(webapp.sessionId, app, url)) {
+          return done(null, {
             _id: webapp._id,
             url: url,
             token: toAuthJSON(webapp, randomstring.generate(12), authType, app).token
           })
-          return done(null, false, { message: 'No more slot available' })
-        })
+        } else return done(null, false, { message: 'No more slot available' })
+
       }).catch(done)
     }).catch(done)
 }
