@@ -4,6 +4,9 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const jwt = require('jsonwebtoken')
 
+const { NoSecretFound, UnreservedSlot } = require('../error/exception/auth')
+
+
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
 const UsersWeb = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
 const WorkflowApplication = require(process.cwd() + '/lib/overwatch/mongodb/models/workflows_application')

@@ -5,7 +5,9 @@ const passport = require('passport')
 const jwt = require('express-jwt')
 
 const UsersAndroid = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
-const SlotsManager = require('../../../lib/overwatch/slotsManager/slotsManager')
+const SlotsManager = require(process.cwd() + '/lib/overwatch/slotsManager/slotsManager')
+
+const { NoSecretFound, UnreservedSlot } = require('../error/exception/auth')
 
 module.exports = {
   authType: 'local',
@@ -23,27 +25,23 @@ module.exports = {
   ]
 }
 
-function generateSecretFromHeaders(req, payload, done) {
+function getTokenFromHeaders(req, res, next) {
   const { headers: { authorization } } = req
-  if (authorization && authorization.split(' ')[0] === 'Android') {
-    UsersAndroid.findOne({ email: payload.data.email })
-      .then(user => done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET))
-  } else if (authorization && authorization.split(' ')[0] === 'WebApplication') {
-    if (SlotsManager.getSn(payload.data.sessionId))
-      done(null, payload.data.salt + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
-    else
-      done(null, process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
-  } else {
-    done('Unknown token type')
-  }
-
+  if (authorization && authorization.split(' ')[0] === 'Android') return authorization.split(' ')[1]
+  else if (authorization && authorization.split(' ')[0] === 'WebApplication') return authorization.split(' ')[1]
+  else return null
 }
 
-function getTokenFromHeaders(req) {
+function generateSecretFromHeaders(req, payload, done) {
   const { headers: { authorization } } = req
-
-  if (authorization && authorization.split(' ')[0] === 'Android') return authorization.split(' ')[1]
-  if (authorization && authorization.split(' ')[0] === 'WebApplication') return authorization.split(' ')[1]
-
-  return null
+  if (authorization.split(' ')[0] === 'Android') {
+    UsersAndroid.findOne({ email: payload.data.email })
+      .then(user => done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET))
+  } else if (authorization.split(' ')[0] === 'WebApplication') {
+    if (SlotsManager.getSn(payload.data.sessionId)) {
+      done(null, payload.data.salt + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
+    }
+    done(new UnreservedSlot())
+  }
+  done(new NoSecretFound())
 }

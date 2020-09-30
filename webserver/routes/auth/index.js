@@ -19,7 +19,7 @@
  */
 
 'use strict'
-const debug = require('debug')('linto-overwatch:webserver:auth:basic')
+const debug = require('debug')('linto-overwatch:webserver:auth')
 
 const WorkflowApplication = require(process.cwd() + '/webserver/lib/workflowApplication')
 const User = require(process.cwd() + '/webserver/lib/user')
@@ -44,7 +44,7 @@ module.exports = (webServer, auth) => {
       path: '/android/logout',
       method: 'get',
       controller: [
-        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (auth.isAuthenticate) ? auth.isAuthenticate : undefined,
         (req, res, next) => {
           User.logout(req.payload.data)
           res.status(200).send('Ok')
@@ -57,7 +57,6 @@ module.exports = (webServer, auth) => {
       method: 'post',
       controller: [
         (req, res, next) => {
-          req.headers.origin = 'localhost'
           if (req.headers.origin) {
             req.body.originurl = extractHostname(req.headers.origin)
             next()
@@ -75,7 +74,7 @@ module.exports = (webServer, auth) => {
       path: '/isAuth',
       method: 'get',
       controller: [
-        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (auth.isAuthenticate) ? auth.isAuthenticate : undefined,
         (req, res, next) => {
           res.status(200).send('Ok')
         }
@@ -86,7 +85,7 @@ module.exports = (webServer, auth) => {
       path: '/scopes',
       method: 'get',
       controller: [
-        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (auth.isAuthenticate) ? auth.isAuthenticate : undefined,
         (req, res, next) => {
           WorkflowApplication.getWorkflowApp(req.payload.data)
             .then(scopes => {
