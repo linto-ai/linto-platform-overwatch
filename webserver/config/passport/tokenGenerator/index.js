@@ -6,29 +6,17 @@ const REFRESH_TOKEN_DAYS_TIME = 14
 const ANDROID_TOKEN = 'Android'
 const WEB_TOKEN = 'WebApplication'
 
+module.exports = function (tokenData, type) {
+  let expiration_time_days = 60
+  const authSecret = tokenData.salt + type
 
-module.exports = function (user, authSecret, type){
-    let expiration_time_days = 60
-    let data = {
-      id: user._id
-    }
-
-    if (type === ANDROID_TOKEN) {
-      data.email = user.email
-      data.sessionId = process.env.LINTO_STACK_OVERWATCH_DEVICE_TOPIC_KEY + user._id
-    } else if (type === WEB_TOKEN) {
-      data.originUrl = user.originUrl
-      data.applicationId = user.application.applicationId
-      data.sessionId = user.sessionId
-      data.topic = user.topic
-      data.salt = authSecret
-      expiration_time_days = 1
-    }
-
-    return {
-      _id: user._id,
-      token: generateJWT(data, authSecret + type, expiration_time_days, type)
-    }
+  if (type === WEB_TOKEN) expiration_time_days = 1
+  else delete tokenData.salt
+  
+  return {
+    _id: tokenData._id,
+    token: generateJWT(tokenData, authSecret, expiration_time_days, type)
+  }
 }
 
 function generateJWT(data, authSecret, days = 60, type) {

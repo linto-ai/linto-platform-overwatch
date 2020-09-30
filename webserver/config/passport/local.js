@@ -27,16 +27,21 @@ function generateUserTokenAndroid(username, password, done) {
   MongoAndroidUsers.findOne({ email: username })
     .then(user => {
       if (!user || !MongoAndroidUsers.validatePassword(password, user)) return done(new InvalidCredential())
-      const tokenSalt = randomstring.generate(12)
-      MongoAndroidUsers.update({ _id: user._id, keyToken: tokenSalt })
+
+      let tokenData = {
+        salt: randomstring.generate(12),
+        sessionId: process.env.LINTO_STACK_OVERWATCH_DEVICE_TOPIC_KEY + user._id,
+        email: user.email
+      }
+
+      MongoAndroidUsers.update({ _id: user._id, keyToken: tokenData.salt })
         .then(user => {
           if (!user) return done(new UnableToGenerateKeyToken())
         })
-
       return done(null, {
         _id: user.id,
         email: user.email,
-        token: TokenGenerator(user, tokenSalt, ANDROID_TOKEN).token,
+        token: TokenGenerator(tokenData, ANDROID_TOKEN).token,
       })
     }).catch(done)
 }
@@ -54,17 +59,21 @@ function generateUserTokenWeb(url, requestToken, done) {
   MongoWebappHosts.findOne({ originUrl: url })
     .then((webapp) => {
       let app = MongoWebappHosts.validApplicationAuth(webapp, requestToken)
-      webapp.application = app
-
       MongoWorkflowApplication.getScopesById(app.applicationId).then(topic => {
-        webapp.topic = topic
-        webapp.sessionId = process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12)
+        let tokenData = {
+          _id: webapp._id,
+          originUrl: url,
+          application: app.applicationId,
+          topic: topic,
+          sessionId: process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12),
+          salt: randomstring.generate(12)
+        }
 
-        if (SlotsManager.takeSlotIfAvailable(webapp.sessionId, app, url)) {
+        if (SlotsManager.takeSlotIfAvailable(tokenData.sessionId, app, url)) {
           return done(null, {
             _id: webapp._id,
             url: url,
-            token: TokenGenerator(webapp, randomstring.generate(12), WEB_TOKEN).token
+            token: TokenGenerator(tokenData, WEB_TOKEN).token
           })
         } else return done(new NoSlotAvailable())
       }).catch(done)

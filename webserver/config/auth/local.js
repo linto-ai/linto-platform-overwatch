@@ -36,7 +36,7 @@ function generateSecretFromHeaders(req, payload, done) {
   if (!payload || !payload.data) {
     done(new MalformedToken())
   } else {
-
+    
     const { headers: { authorization } } = req
     if (authorization.split(' ')[0] === 'Android') {
       UsersAndroid.findOne({ email: payload.data.email })
