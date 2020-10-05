@@ -58,7 +58,7 @@ class NoSlotAvailable extends Error {
     this.type = 'auth_web'
     this.status = '401'
     if (message) this.message = message
-    else this.message = 'No slot avaiable for the requested website'
+    else this.message = 'No slot available for the requested website'
   }
 }
 
