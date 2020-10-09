@@ -88,11 +88,8 @@ module.exports = (webServer, auth) => {
         (auth.isAuthenticate) ? auth.isAuthenticate : undefined,
         (req, res, next) => {
           WorkflowApplication.getWorkflowApp(req.payload.data)
-            .then(scopes => {
-              res.status(200).json(scopes)
-            }).catch(err => {
-              res.status(500).send('Can\'t retrieve scope')
-            })
+            .then(scopes => res.status(200).json(scopes))
+            .catch(err => res.status(500).send('Can\'t retrieve scope'))
         }
       ]
     }
