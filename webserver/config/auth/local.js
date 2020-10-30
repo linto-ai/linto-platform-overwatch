@@ -9,6 +9,8 @@ const SlotsManager = require(process.cwd() + '/lib/overwatch/slotsManager/slotsM
 
 const { UnreservedSlot, MalformedToken } = require('../error/exception/auth')
 
+const refreshToken = require('./refresh')
+
 module.exports = {
   authType: 'local',
   authenticate_android: passport.authenticate('local-android', { session: false }),
@@ -22,13 +24,25 @@ module.exports = {
     (req, res, next) => {
       next()
     }
+  ],
+  refresh_android: [
+    jwt({
+      secret: generateRefreshSecretFromHeaders,
+      userProperty: 'payload',
+      getToken: getTokenFromHeaders,
+    }),
+    async (req, res, next) => {
+      const { headers: { authorization } } = req
+      let token = await refreshToken(authorization)
+      res.local = token
+      next()
+    }
   ]
 }
 
 function getTokenFromHeaders(req, res, next) {
   const { headers: { authorization } } = req
   if (authorization && authorization.split(' ')[0] === 'Android') return authorization.split(' ')[1]
-  else if (authorization && authorization.split(' ')[0] === 'WebApplication') return authorization.split(' ')[1]
   else return null
 }
 
@@ -36,7 +50,6 @@ function generateSecretFromHeaders(req, payload, done) {
   if (!payload || !payload.data) {
     done(new MalformedToken())
   } else {
-    
     const { headers: { authorization } } = req
     if (authorization.split(' ')[0] === 'Android') {
       UsersAndroid.findOne({ email: payload.data.email })
@@ -47,6 +60,21 @@ function generateSecretFromHeaders(req, payload, done) {
       } else {
         done(new UnreservedSlot())
       }
+    }
+  }
+}
+
+function generateRefreshSecretFromHeaders(req, payload, done) {
+  if (!payload || !payload.data) {
+    done(new MalformedToken())
+  } else {
+
+    const { headers: { authorization } } = req
+    if (authorization.split(' ')[0] === 'Android') {
+      UsersAndroid.findOne({ email: payload.data.email })
+        .then(user => {
+          done(null, user.keyToken + authorization.split(' ')[0] + process.env.LINTO_STACK_OVERWATCH_REFRESH_SECRET + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET)
+        })
     }
   }
 }

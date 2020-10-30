@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const TOKEN_DAYS_TIME = 10
-const REFRESH_TOKEN_DAYS_TIME = 14
+const REFRESH_TOKEN_DAYS_TIME = 20
 
 const ANDROID_TOKEN = 'Android'
 const WEB_TOKEN = 'WebApplication'
@@ -12,14 +12,16 @@ module.exports = function (tokenData, type) {
 
   if (type === WEB_TOKEN) expiration_time_days = 1
   else delete tokenData.salt
-  
+
   return {
     _id: tokenData._id,
     token: generateJWT(tokenData, authSecret, expiration_time_days, type)
   }
 }
 
-function generateJWT(data, authSecret, days = 60, type) {
+//i9XuaweYA746Androidrefreshsecret
+
+function generateJWT(data, authSecret, days = 10, type) {
   const today = new Date()
   const expirationDate = new Date(today)
   expirationDate.setDate(today.getDate() + days)
@@ -35,7 +37,7 @@ function generateJWT(data, authSecret, days = 60, type) {
       refresh_token: jwt.sign({
         data,
         exp: parseInt(expirationDate.getTime() / 1000, REFRESH_TOKEN_DAYS_TIME),
-      }, authSecret + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET),
+      }, authSecret + process.env.LINTO_STACK_OVERWATCH_REFRESH_SECRET + process.env.LINTO_STACK_OVERWATCH_JWT_SECRET),
 
       expiration_date: parseInt(expirationDate.getTime() / 1000, 10),
       session_id: data.sessionId

@@ -25,6 +25,8 @@ const WorkflowApplication = require(process.cwd() + '/webserver/lib/workflowAppl
 const User = require(process.cwd() + '/webserver/lib/user')
 const authWrapper = require(process.cwd() + '/webserver/lib/authWrapper')
 
+const { MalformedToken } = require('../../config/error/exception/auth')
+
 module.exports = (webServer, auth) => {
   return [
     {
@@ -50,6 +52,19 @@ module.exports = (webServer, auth) => {
           res.status(200).send('Ok')
         }
       ]
+    }, {
+      name: 'refresh',
+      path: '/android/refresh',
+      method: 'get',
+      controller: [
+        (auth.refresh_android) ? auth.refresh_android : undefined,
+        (req, res, next) => {
+          if (res.local === undefined)
+            res.status(401).send(new MalformedToken().message)
+          else
+            res.status(202).json(res.local)
+        }
+      ],
     },
     {
       name: 'login',

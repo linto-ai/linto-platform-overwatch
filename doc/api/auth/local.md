@@ -63,6 +63,54 @@ Used to collect information when android authentication is successful (authentic
 Unauthorized
 ```
 
+## Android Refresh
+Used to refresh the user token when expired (authentication Token, refresh Token and mqtt information of the current stack).
+
+**URL** : `/:LINTO_STACK_OVERWATCH_BASE_PATH/local/android/refresh/`
+
+**Method** : `POST`
+
+**Auth required** : YES
+
+**Data header constraints**
+
+```
+Authorization : Android auth_user_refresh_token
+```
+**Data header example**
+```
+Authorization : Android XXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+### Success Response
+
+**Code** : `202 Accepted`
+
+**Info** Generate an new `Android` token type
+
+**Body Content**
+```json
+{
+    "auth_token": "YYYYYYYYYYYYYYYYYYYYYYYYYYY",
+    "refresh_token": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "expiration_date": 1597502813,
+    "session_id": "5ee881b36915343d3dz16b13"
+  }
+}
+```
+
+### Error Response
+
+**Condition** : If token is wrong
+
+**Code** : `401 Unauthorized`
+
+**Body Content** :
+```
+{
+  "message": "The token is malformed"
+}
+```
 
 ## Web Login
 Used to collect information when authentication is successful (authentication Token).

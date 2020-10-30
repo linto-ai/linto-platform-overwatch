@@ -87,6 +87,7 @@ function configureDefaults() {
 			}
 			if(auth === 'local'){
 				process.env.LINTO_STACK_OVERWATCH_JWT_SECRET = ifHas(process.env.LINTO_STACK_OVERWATCH_JWT_SECRET, envdefault.LINTO_STACK_OVERWATCH_JWT_SECRET)
+				process.env.LINTO_STACK_OVERWATCH_REFRESH_SECRET = ifHas(process.env.LINTO_STACK_OVERWATCH_REFRESH_SECRET, envdefault.LINTO_STACK_OVERWATCH_REFRESH_SECRET)
 			}
 		})
 
