@@ -43,6 +43,7 @@ module.exports = {
 function getTokenFromHeaders(req, res, next) {
   const { headers: { authorization } } = req
   if (authorization && authorization.split(' ')[0] === 'Android') return authorization.split(' ')[1]
+  else if (authorization && authorization.split(' ')[0] === 'WebApplication') return authorization.split(' ')[1]
   else return null
 }
 
