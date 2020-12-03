@@ -48,7 +48,7 @@ pipeline {
             }
         }
 
-        stage('Docker build for next (unstable) branch'){
+        stage('Docker build for next (test-unstable) branch'){
             when{
                 branch 'mqtt-auth'
             }
