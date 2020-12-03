@@ -4,13 +4,15 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
 const MongoAndroidUsers = require(process.cwd() + '/lib/overwatch/mongodb/models/android_users')
+const MqttUsers = require(process.cwd() + '/lib/overwatch/mongodb/models/mqtt_users')
+
 const MongoWebappHosts = require(process.cwd() + '/lib/overwatch/mongodb/models/webapp_hosts')
 const MongoWorkflowApplication = require(process.cwd() + '/lib/overwatch/mongodb/models/workflows_application')
 
 const SlotsManager = require(process.cwd() + '/lib/overwatch/slotsManager/slotsManager')
 const TokenGenerator = require('./tokenGenerator')
 
-const { NoSlotAvailable, InvalidCredential, UnableToGenerateKeyToken } = require('../error/exception/auth')
+const { NoSlotAvailable, NoWebAppFound, InvalidCredential, UnableToGenerateKeyToken } = require('../error/exception/auth')
 
 const randomstring = require('randomstring')
 
@@ -38,15 +40,21 @@ function generateUserTokenAndroid(username, password, done) {
         .then(user => {
           if (!user) return done(new UnableToGenerateKeyToken())
         })
-      return done(null, {
-        _id: user.id,
-        email: user.email,
-        token: TokenGenerator(tokenData, ANDROID_TOKEN).token,
-      })
+
+      MqttUsers.findByUsername({ username: tokenData.sessionId }).then(user => {
+        if (user.length === 0) mqttuser = MqttUsers.insertMqttUsers({ email: username, username: tokenData.sessionId, password })
+        else { mqttuser = user[0] }
+
+        return done(null, {
+          mqtt: {
+            mqtt_login: tokenData.sessionId,
+            mqtt_password: password
+          },
+          token: TokenGenerator(tokenData, ANDROID_TOKEN).token,
+        })
+      }).catch(done)
     }).catch(done)
 }
-
-
 
 const STRATEGY_WEB = new LocalStrategy({
   usernameField: 'originurl',
@@ -56,8 +64,12 @@ passport.use('local-web', STRATEGY_WEB)
 
 
 function generateUserTokenWeb(url, requestToken, done) {
+
   MongoWebappHosts.findOne({ originUrl: url })
     .then((webapp) => {
+      if (webapp === undefined)
+        return done(new NoWebAppFound())
+
       let app = MongoWebappHosts.validApplicationAuth(webapp, requestToken)
       MongoWorkflowApplication.getScopesById(app.applicationId).then(topic => {
         let tokenData = {
@@ -70,9 +82,14 @@ function generateUserTokenWeb(url, requestToken, done) {
         }
 
         if (SlotsManager.takeSlotIfAvailable(tokenData.sessionId, app, url)) {
+
           return done(null, {
             _id: webapp._id,
             url: url,
+            mqtt: {
+              mqtt_login: tokenData.sessionId,
+              mqtt_password: app.requestToken
+            },
             token: TokenGenerator(tokenData, WEB_TOKEN).token
           })
         } else return done(new NoSlotAvailable())

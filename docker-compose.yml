@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  linto-overwatch:
+  linto-overwatch-local:
     build: .
-    container_name: linto-platform-overwatch
+    container_name: linto-platform-overwatch-local
     env_file: .env

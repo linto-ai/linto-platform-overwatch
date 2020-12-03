@@ -73,6 +73,17 @@ class UnreservedSlot extends Error {
   }
 }
 
+class NoWebAppFound extends Error {
+  constructor(message) {
+    super()
+    this.name = 'NoWebAppFound'
+    this.type = 'auth_web'
+    this.status = '401'
+    if (message) this.message = message
+    else this.message = 'No registred webapp has been found for the host'
+  }
+}
+
 /****************
 ***Passport******
 ****************/
@@ -97,6 +108,7 @@ module.exports = {
   //Web Exception
   NoSecretFound,
   NoSlotAvailable,
+  NoWebAppFound,
   UnreservedSlot,
   //Passport Exception
   MalformedToken,
