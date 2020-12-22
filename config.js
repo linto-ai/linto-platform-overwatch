@@ -41,9 +41,13 @@ function configureDefaults() {
 		process.env.LINTO_STACK_OVERWATCH_BASE_PATH = ifHas(process.env.LINTO_STACK_OVERWATCH_BASE_PATH, envdefault.LINTO_STACK_OVERWATCH_BASE_PATH)
 
 		//MQTT Configuration
+
 		process.env.LINTO_STACK_MQTT_HOST = ifHas(process.env.LINTO_STACK_MQTT_HOST, envdefault.LINTO_STACK_MQTT_HOST)
 		process.env.LINTO_STACK_MQTT_PORT = ifHas(process.env.LINTO_STACK_MQTT_PORT, envdefault.LINTO_STACK_MQTT_PORT)
 		process.env.LINTO_STACK_MQTT_KEEP_ALIVE = ifHas(process.env.LINTO_STACK_MQTT_KEEP_ALIVE, envdefault.LINTO_STACK_MQTT_KEEP_ALIVE)
+
+		if (process.env.LINTO_STACK_DOMAIN === 'undefined')
+			process.env.LINTO_STACK_DOMAIN = process.env.LINTO_STACK_MQTT_HOST
 
 		process.env.LINTO_STACK_MQTT_USE_LOGIN = ifHas(process.env.LINTO_STACK_MQTT_USE_LOGIN, envdefault.LINTO_STACK_MQTT_USE_LOGIN)
 		if (process.env.LINTO_STACK_MQTT_USE_LOGIN === 'true') {
@@ -52,6 +56,7 @@ function configureDefaults() {
 		}
 
 		//MQTT WS configuration
+		process.env.LINTO_STACK_WSS = ifHas(process.env.LINTO_STACK_WSS, envdefault.LINTO_STACK_WSS)
 		process.env.LINTO_STACK_MQTT_OVER_WS = ifHas(process.env.LINTO_STACK_MQTT_OVER_WS, envdefault.LINTO_STACK_MQTT_OVER_WS)
 		process.env.LINTO_STACK_MQTT_OVER_WS_ENDPOINT = ifHas(process.env.LINTO_STACK_MQTT_OVER_WS_ENDPOINT, envdefault.LINTO_STACK_MQTT_OVER_WS_ENDPOINT)
 
@@ -85,7 +90,7 @@ function configureDefaults() {
 				process.env.LINTO_STACK_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_BASE = ifHas(process.env.LINTO_STACK_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_BASE, envdefault.LINTO_STACK_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_BASE)
 				process.env.LINTO_STACK_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_FILTER = ifHas(process.env.LINTO_STACK_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_FILTER, envdefault.LINTO_STACK_OVERWATCH_AUTH_LDAP_SERVER_SEARCH_FILTER)
 			}
-			if(auth === 'local'){
+			if (auth === 'local') {
 				process.env.LINTO_STACK_OVERWATCH_JWT_SECRET = ifHas(process.env.LINTO_STACK_OVERWATCH_JWT_SECRET, envdefault.LINTO_STACK_OVERWATCH_JWT_SECRET)
 				process.env.LINTO_STACK_OVERWATCH_REFRESH_SECRET = ifHas(process.env.LINTO_STACK_OVERWATCH_REFRESH_SECRET, envdefault.LINTO_STACK_OVERWATCH_REFRESH_SECRET)
 			}

@@ -21,7 +21,6 @@ let customException = ['UnauthorizedError'] // Default JWT exception
 
 let initByAuthType = function (webserver) {
   Object.keys(AuthsException).forEach(key => customException.push(key))
-
   process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
     if (auth === 'local') {
       webserver.app.use(function (err, req, res, next) {

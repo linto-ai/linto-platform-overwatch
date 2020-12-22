@@ -19,7 +19,7 @@
  */
 
 'use strict'
-const debug = require('debug')('linto-overwatch:webserver:auth')
+const debug = require('debug')('linto-overwatch:webserver:routes:auth')
 
 const WorkflowApplication = require(process.cwd() + '/webserver/lib/workflowApplication')
 const User = require(process.cwd() + '/webserver/lib/user')
