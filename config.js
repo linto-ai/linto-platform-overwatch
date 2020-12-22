@@ -56,6 +56,7 @@ function configureDefaults() {
 		}
 
 		//MQTT WS configuration
+		process.env.LINTO_STACK_WSS = ifHas(process.env.LINTO_STACK_WSS, envdefault.LINTO_STACK_WSS)
 		process.env.LINTO_STACK_MQTT_OVER_WS = ifHas(process.env.LINTO_STACK_MQTT_OVER_WS, envdefault.LINTO_STACK_MQTT_OVER_WS)
 		process.env.LINTO_STACK_MQTT_OVER_WS_ENDPOINT = ifHas(process.env.LINTO_STACK_MQTT_OVER_WS_ENDPOINT, envdefault.LINTO_STACK_MQTT_OVER_WS_ENDPOINT)
 

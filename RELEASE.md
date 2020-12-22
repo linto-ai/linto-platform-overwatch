@@ -1,3 +1,9 @@
+# 1.2.0
+- Added MQTT_USER session management
+- Added Web slot manager
+- Added WSS env configuration
+- Added an Handler error request
+
 # 1.1.0
 - Added Android auth
 - Added WebToken auth

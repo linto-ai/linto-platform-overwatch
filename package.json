@@ -1,6 +1,6 @@
 {
   "name": "linto-overwatch",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Overwatch module of linto",
   "main": "index.js",
   "directories": {
