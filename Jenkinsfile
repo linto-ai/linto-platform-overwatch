@@ -53,7 +53,7 @@ pipeline {
                 branch 'mqtt-auth'
             }
             steps {
-                echo 'Publishing test-unstable'
+                echo 'Publishing unstable'
                 script {
                     image = docker.build(env.DOCKER_HUB_REPO)
                     VERSION = sh(
@@ -61,10 +61,9 @@ pipeline {
                         script: "awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'"
                     ).trim()
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_HUB_CRED) {
-                        image.push('latest-test-unstable')
+                        image.push('latest-unstable')
                     }
                 }
             }
         }
-    }// end stages
 }
