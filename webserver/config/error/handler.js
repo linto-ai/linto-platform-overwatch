@@ -16,17 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict'
+const AuthsException = require('./exception/auth')
+let customException = ['UnauthorizedError'] // Default JWT exception
 
-var initByAuthType = function (webserver) {
+let initByAuthType = function (webserver) {
+  Object.keys(AuthsException).forEach(key => customException.push(key))
   process.env.LINTO_STACK_OVERWATCH_AUTH_TYPE.split(',').map(auth => {
     if (auth === 'local') {
       webserver.app.use(function (err, req, res, next) {
-        if (err.name === 'UnauthorizedError') {
+        
+        if (customException.indexOf(err.name) > -1) {
           res.status(err.status).send({ message: err.message })
           console.error(err)
           return
         }
+
         next()
       })
     }

@@ -19,20 +19,67 @@
  */
 
 'use strict'
-const debug = require('debug')('linto-overwatch:webserver:auth:basic')
+const debug = require('debug')('linto-overwatch:webserver:routes:auth')
 
-const scopesApi = require(process.cwd() + '/webserver/api/scopes')
+const WorkflowApplication = require(process.cwd() + '/webserver/lib/workflowApplication')
+const User = require(process.cwd() + '/webserver/lib/user')
+const authWrapper = require(process.cwd() + '/webserver/lib/authWrapper')
+
+const { MalformedToken } = require('../../config/error/exception/auth')
 
 module.exports = (webServer, auth) => {
   return [
     {
       name: 'login',
-      path: '/login',
+      path: '/android/login',
       method: 'post',
       controller: [
-        auth.authenticate,
+        auth.authenticate_android,
         (req, res, next) => {
-          let output = scopesApi.formatAuth(req.user)
+          let output = authWrapper.formatAuthAndroid(req.user)
+          res.status(202).json(output)
+        }
+      ],
+    },
+    {
+      name: 'logout',
+      path: '/android/logout',
+      method: 'get',
+      controller: [
+        (auth.isAuthenticate) ? auth.isAuthenticate : undefined,
+        (req, res, next) => {
+          User.logout(req.payload.data)
+          res.status(200).send('Ok')
+        }
+      ]
+    }, {
+      name: 'refresh',
+      path: '/android/refresh',
+      method: 'get',
+      controller: [
+        (auth.refresh_android) ? auth.refresh_android : undefined,
+        (req, res, next) => {
+          if (res.local === undefined)
+            res.status(401).send(new MalformedToken().message)
+          else
+            res.status(202).json(res.local)
+        }
+      ],
+    },
+    {
+      name: 'login',
+      path: '/web/login',
+      method: 'post',
+      controller: [
+        (req, res, next) => {
+          if (req.headers.origin) {
+            req.body.originurl = extractHostname(req.headers.origin)
+            next()
+          } else res.status(400).json('Origin headers is require')
+        },
+        auth.authenticate_web,
+        (req, res, next) => {
+          let output = authWrapper.formatAuthWeb(req.user)
           res.status(202).json(output)
         }
       ],
@@ -42,7 +89,7 @@ module.exports = (webServer, auth) => {
       path: '/isAuth',
       method: 'get',
       controller: [
-        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (auth.isAuthenticate) ? auth.isAuthenticate : undefined,
         (req, res, next) => {
           res.status(200).send('Ok')
         }
@@ -53,12 +100,23 @@ module.exports = (webServer, auth) => {
       path: '/scopes',
       method: 'get',
       controller: [
-        (auth.isAuthenticate) ? auth.isAuthenticate : auth.authenticate,
+        (auth.isAuthenticate) ? auth.isAuthenticate : undefined,
         (req, res, next) => {
-          let output = scopesApi.getScopesList(req.payload.id)
-          res.status(200).json(output)
+          WorkflowApplication.getWorkflowApp(req.payload.data)
+            .then(scopes => res.status(200).json(scopes))
+            .catch(err => res.status(500).send('Can\'t retrieve scope'))
         }
       ]
     }
   ]
+}
+
+function extractHostname(url) {
+  let hostname
+
+  if (url.indexOf("//") > -1) hostname = url.split('/')[2]
+  else hostname = url.split('/')[0]
+
+  hostname = hostname.split(':')[0].split('?')[0]
+  return hostname
 }

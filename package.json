@@ -1,6 +1,6 @@
 {
   "name": "linto-overwatch",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Overwatch module of linto",
   "main": "index.js",
   "directories": {
@@ -27,8 +27,8 @@
   "author": "yhoupert@linagora.com",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
-    "crypto": "^1.0.1",
     "debug": "^4.1.1",
     "dotenv": "^8.0.0",
     "eventemitter3": "^4.0.0",
@@ -36,8 +36,8 @@
     "express-jwt": "^5.3.1",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.0.0-beta.2",
     "mongodb": "^3.2.5",
-    "mongoose": "^5.8.0",
     "mqtt": "^2.18.8",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
@@ -45,6 +45,8 @@
     "passport-ldapauth": "^2.1.3",
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.5.0",
-    "request": "^2.88.2"
+    "randomstring": "^1.1.5",
+    "request": "^2.88.2",
+    "sha1": "^1.1.1"
   }
 }
