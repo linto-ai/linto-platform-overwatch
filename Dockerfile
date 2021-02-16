@@ -10,4 +10,8 @@ HEALTHCHECK CMD node docker-healthcheck.js || exit 1
 
 EXPOSE 80
 
-CMD ["node", "index.js"]
+COPY ./wait-for-it.sh /
+COPY ./docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+#CMD ["node", "index.js"]

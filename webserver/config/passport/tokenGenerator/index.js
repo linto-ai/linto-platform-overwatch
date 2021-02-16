@@ -19,8 +19,6 @@ module.exports = function (tokenData, type) {
   }
 }
 
-//i9XuaweYA746Androidrefreshsecret
-
 function generateJWT(data, authSecret, days = 10, type) {
   const today = new Date()
   const expirationDate = new Date(today)
