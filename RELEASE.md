@@ -1,3 +1,7 @@
+# 1.2.1
+- Added Wait-for-it for mongo
+- Handle web user with unique password
+
 # 1.2.0
 - Added MQTT_USER session management
 - Added Web slot manager

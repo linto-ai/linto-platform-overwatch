@@ -80,15 +80,14 @@ function generateUserTokenWeb(url, requestToken, done) {
           sessionId: process.env.LINTO_STACK_OVERWATCH_WEB_TOPIC_KEY + randomstring.generate(12),
           salt: randomstring.generate(12)
         }
-
+        app.password = randomstring.generate(12)
         if (SlotsManager.takeSlotIfAvailable(tokenData.sessionId, app, url)) {
-
           return done(null, {
             _id: webapp._id,
             url: url,
             mqtt: {
               mqtt_login: tokenData.sessionId,
-              mqtt_password: app.requestToken
+              mqtt_password: app.password
             },
             token: TokenGenerator(tokenData, WEB_TOKEN).token
           })
